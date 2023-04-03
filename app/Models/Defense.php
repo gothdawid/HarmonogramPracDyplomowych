@@ -5,7 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Schedule extends Model
+class Defense extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'student',
+        'promoter',
+        'examiner',
+    ];
 }
