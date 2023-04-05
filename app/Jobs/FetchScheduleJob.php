@@ -23,7 +23,7 @@ class FetchScheduleJob implements ShouldQueue
     {
     }
 
-    function fetchXmlData(string $xmlUrl): array
+    public function fetchXmlData(string $xmlUrl): array
     {
         $cacheKey = 'xml_' . md5($xmlUrl);
         
