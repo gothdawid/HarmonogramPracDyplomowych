@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\FetchScheduleJob;
 
-class ScheduleControler extends Controller
+class ScheduleController extends Controller
 {
     public function index() {
         FetchScheduleJob::dispatch();

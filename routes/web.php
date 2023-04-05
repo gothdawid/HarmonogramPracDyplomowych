@@ -18,7 +18,6 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/schedule', 'App\Http\Controllers\ScheduleControler@index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -28,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/schedule', [ScheduleController::class, 'index'])->name('');
 
     Route::post('/import', [ExcelImportController::class, 'import'])->name('import');
     Route::get('/calendar', [ExcelImportController::class, 'form'])->name('calendar');
