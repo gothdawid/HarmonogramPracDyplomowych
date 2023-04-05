@@ -8,8 +8,30 @@ use App\Imports\DefenseImport;
 
 class ExcelImportController extends Controller
 {
+    public function form() {
+        return view('calendar');
+    }
+
     public function import(Request $request)
     {
-        $collection = Excel::toArray(new DefenseImport, 'E:\Downloads\defenses.xlsx');
+        if($request->validate([
+            'file' => 'required|mimes:csv,xlx,xls,xlsx|max:2048'
+        ])) {
+            $file = $request->file('file');
+            $fileName = time().'_'.$file->getClientOriginalName();
+            $filePath = $file->storeAs('uploads', $fileName, 'public');
+            $file->move(public_path('uploads'), $fileName);
+            $collection = Excel::toArray(new DefenseImport, $filePath);
+            dd($collection);
+        } else {
+            return back()->with('error', 'Please upload a valid file');
+        }
+        //$collection = Excel::toArray(new DefenseImport, 'E:\Downloads\defenses.xlsx');
+    }
+
+    public function import_deps() {
+        // $xmlDepartmentsObject = $this->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialow.xml');
+        // dd($xmlDepartmentsObject);
+        return view('importdeps');
     }
 }

@@ -22,6 +22,9 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('import.departments')" :active="request()->routeIs('import.departments')">
+                        {{ __('Import departments') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -105,14 +108,14 @@
         </div>
     </div>
 
-    <div id="side_nav" class="top-20 bottom-0 fixed">
+    <div id="side_nav" class="top-0 bottom-0 fixed">
         <aside id="default-sidebar" class="relative bottom-0 left-0 z-40 w-64 h-full transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
             <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
                 <ul class="space-y-2 font-medium">
                     <li>
-                        <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <a href="{{ route('calendar') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 {{ (request()->routeIs('calendar')) ? 'bg-indigo-600' : '' }}">
                             <i class='fas fa-calendar-alt'></i>
-                            <span class="ml-3">New calendar</span>
+                            <span class="flex-1 ml-3 whitespace-nowrap">New Calendar</span>
                         </a>
                     </li>
                     <li>
