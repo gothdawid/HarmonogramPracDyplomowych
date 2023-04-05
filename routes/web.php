@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ExcelImportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,6 +18,7 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/import', [ExcelImportController::class, 'import']);
 
 Route::get('/schedule', 'App\Http\Controllers\ScheduleControler@index');
 
@@ -32,4 +33,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
