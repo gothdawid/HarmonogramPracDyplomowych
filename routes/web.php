@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExcelImportController;
+use App\Http\Controllers\ScheduleController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,12 +29,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/schedule', [ScheduleController::class, 'index'])->name('');
 
     Route::post('/import', [ExcelImportController::class, 'import'])->name('import');
     Route::get('/calendar', [ExcelImportController::class, 'form'])->name('calendar');
 
-    Route::get('/import_deps', [ExcelImportController::class, 'import_deps'])->name('import.departments');
+    Route::get('/schedule', [ScheduleController::class, 'index'])->name('');
+    Route::get('/import_deps', [ScheduleController::class, 'import_deps'])->name('import.departments');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

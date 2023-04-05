@@ -28,10 +28,4 @@ class ExcelImportController extends Controller
         }
         //$collection = Excel::toArray(new DefenseImport, 'E:\Downloads\defenses.xlsx');
     }
-
-    public function import_deps() {
-        // $xmlDepartmentsObject = $this->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialow.xml');
-        // dd($xmlDepartmentsObject);
-        return view('importdeps');
-    }
 }
