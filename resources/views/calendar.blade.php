@@ -171,14 +171,17 @@
 
                     <form action="{{ route('import') }}" method="post" enctype="multipart/form-data">
                         @csrf
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input type="text" name="calendar_name" id="calendar_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                            <label for="calendar_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Calendar name</label>
+                        </div>
 
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload file</label>
-                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file">
-                        <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">Select a file with excel extension or csv.</div>
+                        <div class="mb-6">
+                            <input class="appearance-none block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_excel" id="file" name="file" type="file">
+                            <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">Select a file with excel extension or csv.</div>
+                        </div>
 
-                        {{-- <label for="file">Defenses file</label>
-                        <input type="file" name="file" id="file"> --}}
-                        <button type="submit">Import</button>
+                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-5 shadow-lg shadow-blue-500/50 hover:shadow-blue-700/50">Create</button>
                     </form>
                     
                 </div>
