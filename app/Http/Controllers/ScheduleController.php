@@ -25,21 +25,28 @@ class ScheduleController extends Controller
     {
         $department = Department::where('Departament-ID', $id)->first();
         if ($department) {
-            $department->update();
-            $department->touch();
+            $lastUpdated = $department->updated_at;
+            if ($lastUpdated->diffInSeconds(now()) > 60) {
+                $job = new FetchScheduleJob($id);
+                $job::dispatch($id);
+                $department->update();
+                $department->touch();
+                print("UPDATED");
+            }
+            print("UPDATE NOT REQUIRED");
+
         } else {
             $department = new Department();
             $department['Departament-ID'] = $id;
             $department['Departament-Name'] = $request->query('name');
+
+            //TODO - data size
             $department['size'] = 0;
             $department->save();
+
+            $job = new FetchScheduleJob($id);
+            $job::dispatch($id);
+            print("CREATED");
         }
-
-
-
-
-        $job = new FetchScheduleJob($id);
-        dd($job::dispatch($id));
-
     }
 }
