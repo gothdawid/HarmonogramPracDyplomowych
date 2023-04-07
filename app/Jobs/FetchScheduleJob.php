@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Models\Lesson;
 
 
 class FetchScheduleJob implements ShouldQueue
@@ -53,11 +54,12 @@ class FetchScheduleJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $formated_schedule = collect();
         $xmlErrorCount = 0;
 
         $xmlTeachersObject = $this->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialu.ID=' . $this->depId . '.xml');
         //dd($xmlTeachersObject);
+
+        $objects = [];
 
         if (array_key_exists('ITEM', $xmlTeachersObject['ITEMS'])) {
             foreach ($xmlTeachersObject['ITEMS']['ITEM'] as $teacher) {
@@ -69,12 +71,12 @@ class FetchScheduleJob implements ShouldQueue
                         foreach ($schedule as $lesson) {
                             //dd($lesson);
                             if (is_string($lesson) || empty($lesson) || count($lesson) < 4) {
-                                Log::info($lesson);
+                                //Log::info($lesson);
                                 $lesson = $schedule;
                             }
                             try {
                                 $data = [];
-                                //$data['Departament-ID'] = $Department['ID'];
+                                $data['Departament-ID'] = $this->depId;
                                 //$data['Departament-Name'] = $Department['NAME'];
                                 $data['Teacher-ID'] = $teacher['ID'];
                                 $data['Teacher-Name'] = $teacher['NAME'];
@@ -84,20 +86,30 @@ class FetchScheduleJob implements ShouldQueue
                                 $data['DAY'] = $lesson['DAY'];
                                 $data['OD_GODZ'] = $lesson['OD_GODZ'];
                                 $data['DO_GODZ'] = $lesson['DO_GODZ'];
+
+                                if (empty($lesson['G_OD']))
+                                    $lesson['G_OD'] = 0;
+                                if (empty($lesson['G_DO']))
+                                    $lesson['G_DO'] = 0;
                                 $data['G_OD'] = $lesson['G_OD'];
                                 $data['G_DO'] = $lesson['G_DO'];
+
                                 $data['NAME'] = $lesson['NAME'];
                                 $data['NAME_EN'] = $lesson['NAME_EN'];
                                 $data['ID_KALENDARZ'] = $lesson['ID_KALENDARZ'];
                                 $data['TERMIN_K'] = $lesson['TERMIN_K'];
                                 //$data['TERMIN_DT'] = $lesson['TERMIN_DT'];
+                                $obj = new Lesson($data);
 
-                                $formated_schedule->push($data);
+                                //dd($lesson);
+                                //$obj->save();
+                                array_push($objects, $data);
                             } catch (\Throwable $th) {
-                                Log::debug($lesson);
-                                Log::debug($schedule);
-                                throw ($th);
+                                dd($lesson);
+                                Log::debug($obj);
+                                //Log::debug($schedule);
                                 $xmlErrorCount++;
+                                throw ($th);
                             }
                         }
                     }
@@ -108,8 +120,8 @@ class FetchScheduleJob implements ShouldQueue
 
         }
 
-        print($xmlErrorCount);
-        Cache::put('schedule-data', $formated_schedule);
-        //dd($formated_schedule);
+        //print($xmlErrorCount);
+        //dd($objects);
+        Lesson::insert($objects);
     }
 }

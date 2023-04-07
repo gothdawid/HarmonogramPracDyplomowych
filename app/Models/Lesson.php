@@ -10,6 +10,7 @@ class Lesson extends Model
     use HasFactory;
     protected $fillable = [
         'Departament-ID',
+        'Teacher-ID',
         'Teacher-Name',
         'Jednostka',
         'Jednostka-en',

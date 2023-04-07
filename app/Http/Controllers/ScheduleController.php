@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Lesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -26,14 +27,16 @@ class ScheduleController extends Controller
         $department = Department::where('Departament-ID', $id)->first();
         if ($department) {
             $lastUpdated = $department->updated_at;
-            if ($lastUpdated->diffInSeconds(now()) > 60) {
+            if ($lastUpdated->diffInSeconds(now()) > 1) {
+                Lesson::where('Departament-ID', $id)->delete();
+
                 $job = new FetchScheduleJob($id);
                 $job::dispatch($id);
                 $department->update();
                 $department->touch();
                 print("UPDATED");
-            }
-            print("UPDATE NOT REQUIRED");
+            } else
+                print("UPDATE NOT REQUIRED");
 
         } else {
             $department = new Department();
