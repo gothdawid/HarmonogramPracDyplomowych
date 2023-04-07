@@ -20,7 +20,7 @@ class ScheduleController extends Controller
         // $xmlDepartmentsObject = $this->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialow.xml');
         // dd($xmlDepartmentsObject);
 
-        $job = new FetchScheduleJob();
+        $job = new FetchScheduleJob(0);
 
         $xmlDepartmentsObject = $job->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialow.xml');
 
@@ -28,5 +28,11 @@ class ScheduleController extends Controller
         return view('importdeps', [
             'data' => $xmlDepartmentsObject['PL']['ITEMS']['ITEM']
         ]);
+    }
+
+    public function download_dep($id)
+    {
+        $job = new FetchScheduleJob($id);
+        $job::dispatch($id);
     }
 }

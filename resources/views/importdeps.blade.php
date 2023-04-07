@@ -51,13 +51,29 @@
                                             21:59 05.04.2023
                                         </td>
                                         <td class="px-6 py-4">
-                                            <button type="button" value="{{ $item['ID']}}" class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2">
+                                            <button type="button" onclick="refreshDepartment({{ $item['ID'] }})"
+                                            class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2">
                                                 Update
                                             </button>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <script>
+                                function refreshDepartment(id) {
+                                $.ajax({
+                                    url: '/deps/' + id + '/refresh',
+                                    type: 'GET',
+                                    success: function(response) {
+                                    // obsługa odpowiedzi serwera po poprawnym wykonaniu zapytania
+                                        console.log(response);
+                                    },
+                                    error: function(xhr, status, error) {
+                                    // obsługa błędu podczas wykonywania zapytania
+                                    }
+                                });
+                                }
+                            </script>
                         </table>
                     </div>
 
