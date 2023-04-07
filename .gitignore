@@ -19,3 +19,4 @@ yarn-error.log
 /.vscode
 *.lock
 package-lock.json
+/public/uploads

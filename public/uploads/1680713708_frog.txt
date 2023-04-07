@@ -1,8 +1,0 @@
-login: frog
-passwd: 2mWRkmbjQiGt5FfBjpIHyreEJ
-port: 10169
-serwer: frog01.mikr.us
-
-gite -> eoXowzT3XCDnWzDe0djHBXKrK
-
-2a01:4f9:3b:3e66::169
