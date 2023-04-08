@@ -18,20 +18,36 @@ class ScheduleController extends Controller
         $xmlDepartmentsObject = $job->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialow.xml');
         $data = [];
 
+        $deps = Department::all(['Departament-ID', 'UPDATED_AT']);
+        foreach ($xmlDepartmentsObject['PL']['ITEMS']['ITEM'] as $xmlDep) {
+            $found = false;
+            foreach ($deps as $dep) {
+                $status = 0;
+                if ($dep['Departament-ID'] == $xmlDep['ID']) {
+                    $found = true;
 
-        for ($i = 0; $i < count($xmlDepartmentsObject['PL']['ITEMS']['ITEM']); $i++) {
-            $dep = Department::where('Departament-ID', $xmlDepartmentsObject['PL']['ITEMS']['ITEM'][$i]['ID'])->first();
-            $data[$i] = $xmlDepartmentsObject['PL']['ITEMS']['ITEM'][$i];
-            if ($dep) {
-                $data[$i]['Dep_id'] = $dep['Departament-ID'];
-                $data[$i]['UPDATED_AT'] = $dep->updated_at;
-                if ($dep->updated_at->diffInSeconds(now()) > 60 * 60 * 6)
-                    $data[$i]['Status'] = 1;
-                else
-                    $data[$i]['Status'] = 2;
-            } else {
-                $data[$i]['Status'] = 0;
-                $data[$i]['UPDATED_AT'] = "";
+                    $time = strtotime($dep['UPDATED_AT']) + 60 * 60 * 6;
+                    if ($time < time()) $status = 1; 
+                    else $status = 2;
+                    
+                    array_push($data, [
+                        'ID' => $xmlDep['ID'],
+                        'NAME' => $xmlDep['NAME'],
+                        'Dep_id' => $xmlDep['ID'],
+                        'UPDATED_AT' => date('d.m.Y H:i:s', strtotime($dep['UPDATED_AT'])),
+                        'Status' => $status
+                    ]);
+                    break;
+                }
+            }
+            if (!$found) {
+                array_push($data, [
+                    'ID' => $xmlDep['ID'],
+                    'NAME' => $xmlDep['NAME'],
+                    'Dep_id' => $xmlDep['ID'],
+                    'UPDATED_AT' => 0,
+                    'Status' => $status
+                ]);
             }
         }
 
