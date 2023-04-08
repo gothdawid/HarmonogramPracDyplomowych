@@ -55,7 +55,7 @@
                                             </div>
                                         </td>
                                         <td id="updated_{{ $item['ID'] }}" class="px-6 py-4 bg-gray-50 dark:bg-gray-900">
-                                            {{ $item['UPDATED_AT'] }}
+                                            {{ $item['UPDATED_AT'] == 0 ? "Never" : $item['UPDATED_AT'] }}
                                         </td>
                                         <td class="px-6 py-4">
                                             <button id="up_button_{{ $item['ID'] }}" type="button" onclick="refreshDepartment({{ $item['ID'] }}, '{{ $item['NAME'] }}')"
