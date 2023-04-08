@@ -27,7 +27,7 @@ return new class extends Migration {
             $table->string('NAME_EN');
             $table->unsignedBigInteger('ID_KALENDARZ');
             $table->string('TERMIN_K');
-            $table->string('TERMIN_DT');
+            $table->string('TERMIN_DT', 10000);
             $table->timestamps();
 
             $table->foreign('Departament-ID')
