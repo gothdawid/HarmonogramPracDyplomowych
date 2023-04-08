@@ -33,8 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/import', [ExcelImportController::class, 'import'])->name('import');
     Route::get('/calendar', [ExcelImportController::class, 'form'])->name('calendar');
 
-    Route::get('/schedule', [ScheduleController::class, 'index'])->name('');
-    Route::get('/import_deps', [ScheduleController::class, 'import_deps'])->name('import.departments');
+    //Route::get('/schedule', [ScheduleController::class, 'index'])->name('');
+    Route::get('/deps/load', [ScheduleController::class, 'import_deps'])->name('import.departments');
+    Route::get('/deps/{id}/refresh', [ScheduleController::class, 'download_dep'])->name('deps.refresh');
 });
 
 require __DIR__ . '/auth.php';

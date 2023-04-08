@@ -12,7 +12,7 @@
 
                         
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-900">
@@ -36,9 +36,16 @@
                                             {{ $item['NAME'] }}
                                         </th>
                                         <td class="px-6 py-4">
-                                            <span class="flex w-5 h-5 bg-yellow-300 rounded-full"></span>
-                                            {{-- <span class="flex w-3 h-3 bg-green-500 rounded-full"></span> --}}
-                                            {{-- <span class="flex w-3 h-3 bg-red-500 rounded-full"></span> --}}
+                                            @if ($item['Status'] == 0)
+                                                <span class="flex h-7 bg-red-500 rounded-full mx-2"></span>
+                                            @endif
+                                            @if ($item['Status'] == 1)
+                                                <span class="flex h-7 bg-yellow-300 rounded-full mx-2"></span>
+                                            @endif
+                                            @if ($item['Status'] == 2)
+                                                <span class="flex h-7 bg-green-500 rounded-full mx-2"></span>
+                                            @endif
+
                                             {{-- <div role="status">
                                                 <svg aria-hidden="true" class="inline w-6 h-6 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
@@ -47,17 +54,33 @@
                                                 <span class="sr-only">Loading...</span>
                                             </div> --}}
                                         </td>
-                                        <td class="px-6 py-4 bg-gray-50 dark:bg-gray-900 ">
-                                            21:59 05.04.2023
+                                        <td class="px-6 py-4 bg-gray-50 dark:bg-gray-900">
+                                            {{ $item['UPDATED_AT'] }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            <button type="button" value="{{ $item['ID']}}" class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2">
+                                            <button type="button" onclick="refreshDepartment({{ $item['ID'] }}, '{{ $item['NAME'] }}')"
+                                            class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2">
                                                 Update
                                             </button>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <script>
+                                function refreshDepartment(id, name) {
+                                $.ajax({
+                                    url: '/deps/' + id + '/refresh?name=' + name,
+                                    type: 'GET',
+                                    success: function(response) {
+                                    // obsługa odpowiedzi serwera po poprawnym wykonaniu zapytania
+                                        console.log(response);
+                                    },
+                                    error: function(xhr, status, error) {
+                                    // obsługa błędu podczas wykonywania zapytania
+                                    }
+                                });
+                                }
+                            </script>
                         </table>
                     </div>
 
