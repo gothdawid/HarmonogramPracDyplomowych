@@ -52,9 +52,9 @@ class ScheduleController extends Controller
                 $job::dispatch($id);
                 $department->update();
                 $department->touch();
-                print("UPDATED");
+                print($id);
             } else
-                print("UPDATE NOT REQUIRED");
+                print("no");
 
         } else {
             $department = new Department();
@@ -67,7 +67,7 @@ class ScheduleController extends Controller
 
             $job = new FetchScheduleJob($id);
             $job::dispatch($id);
-            print("CREATED");
+            print($id);
         }
     }
 }
