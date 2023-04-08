@@ -14,8 +14,8 @@ class ScheduleController extends Controller
     public function import_deps()
     {
 
-        $job = new FetchScheduleJob(0);
-        $xmlDepartmentsObject = $job->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialow.xml');
+        $_job = new FetchScheduleJob(null);
+        $xmlDepartmentsObject = $_job->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialow.xml');
         $data = [];
 
         $deps = Department::all(['Departament-ID', 'UPDATED_AT']);
@@ -60,14 +60,15 @@ class ScheduleController extends Controller
 
     public function download_dep(Request $request, $id)
     {
+        Log::notice($id);
         $department = Department::where('Departament-ID', $id)->first();
         if ($department) {
             $lastUpdated = $department->updated_at;
             if ($lastUpdated->diffInSeconds(now()) > 60 * 60 * 6 || $department->lessons()->count() < 1) {
                 Lesson::where('Departament-ID', $id)->delete();
 
-                $job = new FetchScheduleJob($id);
-                $job::dispatch($id);
+                $job = new FetchScheduleJob($department);
+                $job::dispatch($department);
                 $department->update();
                 $department->touch();
                 print($id);
@@ -83,8 +84,14 @@ class ScheduleController extends Controller
             $department['size'] = 0;
 
             $department->save();
-            $job = new FetchScheduleJob($id);
-            $job::dispatch($id);
+            try {
+                $job = new FetchScheduleJob($department);
+                $job::dispatch($department);
+            } catch (\Exception $e) {
+                Log::error($e);
+
+            }
+
             print($id);
         }
     }
