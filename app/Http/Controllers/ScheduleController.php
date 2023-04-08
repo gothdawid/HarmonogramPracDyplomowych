@@ -27,9 +27,11 @@ class ScheduleController extends Controller
                     $found = true;
 
                     $time = strtotime($dep['UPDATED_AT']) + 60 * 60 * 6;
-                    if ($time < time()) $status = 1; 
-                    else $status = 2;
-                    
+                    if ($time < time())
+                        $status = 1;
+                    else
+                        $status = 2;
+
                     array_push($data, [
                         'ID' => $xmlDep['ID'],
                         'NAME' => $xmlDep['NAME'],
@@ -46,7 +48,7 @@ class ScheduleController extends Controller
                     'NAME' => $xmlDep['NAME'],
                     'Dep_id' => $xmlDep['ID'],
                     'UPDATED_AT' => 0,
-                    'Status' => $status
+                    'Status' => 0
                 ]);
             }
         }
@@ -61,7 +63,7 @@ class ScheduleController extends Controller
         $department = Department::where('Departament-ID', $id)->first();
         if ($department) {
             $lastUpdated = $department->updated_at;
-            if ($lastUpdated->diffInSeconds(now()) > 60 * 60 * 6) {
+            if ($lastUpdated->diffInSeconds(now()) > 60 * 60 * 6 || $department->lessons()->count() < 1) {
                 Lesson::where('Departament-ID', $id)->delete();
 
                 $job = new FetchScheduleJob($id);
@@ -79,8 +81,8 @@ class ScheduleController extends Controller
 
             //TODO - data size
             $department['size'] = 0;
-            $department->save();
 
+            $department->save();
             $job = new FetchScheduleJob($id);
             $job::dispatch($id);
             print($id);

@@ -23,7 +23,8 @@ class Lesson extends Model
         'NAME',
         'NAME_EN',
         'ID_KALENDARZ',
-        'TERMIN_K'
+        'TERMIN_K',
+        'TERMIN_DT'
     ];
     
     public function department() {

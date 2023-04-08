@@ -98,16 +98,23 @@ class FetchScheduleJob implements ShouldQueue
                                 $data['NAME_EN'] = $lesson['NAME_EN'];
                                 $data['ID_KALENDARZ'] = $lesson['ID_KALENDARZ'];
                                 $data['TERMIN_K'] = $lesson['TERMIN_K'];
-                                //$data['TERMIN_DT'] = $lesson['TERMIN_DT'];
+
+                                if (!array_key_exists('TERMIN_DT', $lesson)) {
+                                    $data['TERMIN_DT'] = "";
+                                    //dd($data);
+                                } else {
+                                    $data['TERMIN_DT'] = $lesson['TERMIN_DT'];
+                                }
+
                                 $obj = new Lesson($data);
 
                                 //dd($lesson);
                                 //$obj->save();
                                 array_push($objects, $data);
                             } catch (\Throwable $th) {
-                                dd($lesson);
+                                //dd($lesson);
                                 Log::debug($obj);
-                                //Log::debug($schedule);
+                                Log::debug($schedule);
                                 $xmlErrorCount++;
                                 throw ($th);
                             }
