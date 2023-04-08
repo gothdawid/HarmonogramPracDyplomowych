@@ -26,8 +26,9 @@ class Lesson extends Model
         'TERMIN_K',
         'TERMIN_DT'
     ];
-    
-    public function department() {
-        return $this->belongsTo(Department::class, 'Departament-ID');
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'Departament-ID', 'Departament-ID');
     }
 }
