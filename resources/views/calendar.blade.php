@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('New calendar') }}
         </h2>
     </x-slot>
 
@@ -9,26 +9,27 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{-- {{ __("Left usages: 100") }} --}}
-                    @if($errors->any())
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    @if(session('error'))
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3" role="alert">
                             <strong class="font-bold">Holy smokes!</strong>
-                            <span class="block sm:inline">{{ implode('', $errors->all(':message')) }}</span>
+                            <span class="block sm:inline">{{ session('error') }}</span>
                             <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
                                 <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
                             </span>
                         </div>
                     @endif
 
+                    <br>
+                    @if(isset($collection) && !empty($collection))
+                        {{-- TODO --}}
+                        {{ __('TODO') }}
+                    @endif
+
+
                     <div class="antialiased sans-serif bg-dark py-5">
                         <div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak>
                             <div class="container mx-auto">
-                                  
-                                <!-- <div class="font-bold text-gray-800 text-xl mb-4">
-                                    Schedule Tasks
-                                </div> -->
-                    
-                                <div class="bg-dark rounded-lg shadow shadow-slate-300 overflow-hidden">
+                                <div class="bg-dark rounded-lg shadow shadow-slate-500 overflow-hidden">
                     
                                     <div class="flex items-center justify-between py-2 px-6">
                                         <div>
@@ -169,16 +170,19 @@
                         </div>
                       </div>
 
-                    <form action="{{ route('import') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('import') }}" method="post" enctype="multipart/form-data" class="p-8">
                         @csrf
+                        <div class="relative z-0 w-full mb-6 group">
+                            <input autocomplete="off" type="text" name="calendar_name" id="calendar_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                            <label for="calendar_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Calendar name</label>
+                        </div>
 
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload file</label>
-                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file">
-                        <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">Select a file with excel extension or csv.</div>
+                        <div class="mb-6">
+                            <input class="appearance-none block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_excel" id="file" name="file" type="file">
+                            <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">Select a file with excel extension or csv.</div>
+                        </div>
 
-                        {{-- <label for="file">Defenses file</label>
-                        <input type="file" name="file" id="file"> --}}
-                        <button type="submit">Import</button>
+                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 hover:shadow-blue-700/50">Create</button>
                     </form>
                     
                 </div>

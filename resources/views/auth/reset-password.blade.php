@@ -1,4 +1,5 @@
 <x-guest-layout>
+    @include('components.dark')
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
 
