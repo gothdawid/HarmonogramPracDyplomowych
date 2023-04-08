@@ -16,9 +16,27 @@ class ScheduleController extends Controller
 
         $job = new FetchScheduleJob(0);
         $xmlDepartmentsObject = $job->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialow.xml');
+        $data = [];
+
+
+        for ($i = 0; $i < count($xmlDepartmentsObject['PL']['ITEMS']['ITEM']); $i++) {
+            $dep = Department::where('Departament-ID', $xmlDepartmentsObject['PL']['ITEMS']['ITEM'][$i]['ID'])->first();
+            $data[$i] = $xmlDepartmentsObject['PL']['ITEMS']['ITEM'][$i];
+            if ($dep) {
+                $data[$i]['Dep_id'] = $dep['Departament-ID'];
+                $data[$i]['UPDATED_AT'] = $dep->updated_at;
+                if ($dep->updated_at->diffInSeconds(now()) > 60 * 60 * 6)
+                    $data[$i]['Status'] = 1;
+                else
+                    $data[$i]['Status'] = 2;
+            } else {
+                $data[$i]['Status'] = 0;
+                $data[$i]['UPDATED_AT'] = "";
+            }
+        }
 
         return view('importdeps', [
-            'data' => $xmlDepartmentsObject['PL']['ITEMS']['ITEM']
+            'data' => $data
         ]);
     }
 
@@ -27,7 +45,7 @@ class ScheduleController extends Controller
         $department = Department::where('Departament-ID', $id)->first();
         if ($department) {
             $lastUpdated = $department->updated_at;
-            if ($lastUpdated->diffInSeconds(now()) > 1) {
+            if ($lastUpdated->diffInSeconds(now()) > 60 * 60 * 6) {
                 Lesson::where('Departament-ID', $id)->delete();
 
                 $job = new FetchScheduleJob($id);

@@ -44,7 +44,7 @@ class FetchScheduleJob implements ShouldQueue
         $array = json_decode($json, true);
 
         // Cache the data for 1 hour
-        Cache::put($cacheKey, $array, 60 * 60);
+        Cache::put($cacheKey, $array, 60 * 60 * 6);
 
         return $array;
     }
