@@ -20,10 +20,10 @@ class FetchScheduleJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    private $depId;
-    public function __construct($depId)
+    private $modelObj;
+    public function __construct($modelObj)
     {
-        $this->depId = $depId;
+        $this->modelObj = $modelObj;
     }
 
     public function fetchXmlData(string $xmlUrl): array
@@ -56,7 +56,7 @@ class FetchScheduleJob implements ShouldQueue
     {
         $xmlErrorCount = 0;
 
-        $xmlTeachersObject = $this->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialu.ID=' . $this->depId . '.xml');
+        $xmlTeachersObject = $this->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialu.ID=' . $this->modelObj['Departament-ID'] . '.xml');
         //dd($xmlTeachersObject);
 
         $objects = [];
@@ -76,7 +76,7 @@ class FetchScheduleJob implements ShouldQueue
                             }
                             try {
                                 $data = [];
-                                $data['Departament-ID'] = $this->depId;
+                                $data['Departament-ID'] = $this->modelObj['Departament-ID'];
                                 //$data['Departament-Name'] = $Department['NAME'];
                                 $data['Teacher-ID'] = $teacher['ID'];
                                 $data['Teacher-Name'] = $teacher['NAME'];
@@ -108,9 +108,8 @@ class FetchScheduleJob implements ShouldQueue
 
                                 $obj = new Lesson($data);
 
-                                //dd($lesson);
-                                //$obj->save();
                                 array_push($objects, $data);
+                                break;
                             } catch (\Throwable $th) {
                                 //dd($lesson);
                                 Log::debug($obj);
@@ -128,7 +127,10 @@ class FetchScheduleJob implements ShouldQueue
         }
 
         //print($xmlErrorCount);
+        //Log::debug(print_r($objects));
         //dd($objects);
-        Lesson::insert($objects);
+        //$this->modelObj->lessons()->saveMany($objects);
+        $this->modelObj->lessons()->createMany($objects);
+        //Lesson::insert($objects);
     }
 }

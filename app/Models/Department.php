@@ -15,7 +15,8 @@ class Department extends Model
         'size'
     ];
 
-    public function lessons() {
-        return $this->hasMany(Lesson::class, 'Departament-ID');
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class, 'Departament-ID', 'Departament-ID');
     }
 }
