@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Models\Lesson;
+use App\Models\Teacher;
 
 
 class FetchScheduleJob implements ShouldQueue
@@ -66,6 +67,12 @@ class FetchScheduleJob implements ShouldQueue
                 if (!is_string($teacher)) {
                     //dd($teacher);
                     $xmlSchedulesObject = $this->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_plan.ID=' . $teacher['ID'] . '.xml');
+
+                    Teacher::firstOrCreate([
+                        'Teacher-ID' => $teacher['ID'],
+                        'Teacher-Name' => $teacher['NAME'],
+                    ]);
+
                     //dd($xmlSchedulesObject);
                     foreach ($xmlSchedulesObject['ITEMS'] as $schedule) {
                         foreach ($schedule as $lesson) {
