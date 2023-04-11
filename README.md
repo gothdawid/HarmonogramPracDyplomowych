@@ -3,6 +3,8 @@
 1. Blazing fast
 2. AI powered
 3. Best in the world
+4. Blockchain ready
+5. Decentralized defenses
 
 To start with it just do `git clone https://github.com/Seelf/HarmonogramPracDyplomowych.git`.
 
