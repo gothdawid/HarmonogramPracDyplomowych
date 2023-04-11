@@ -25,12 +25,23 @@ class ExcelImportController extends Controller
         if($request->validate([
             'file' => 'required|mimes:csv,xlx,xls,xlsx|max:2048'
         ])) {
+            $list_of_commission = [];
+
             $file = $request->file('file');
             $fileName = time().'_'.$file->getClientOriginalName();
             $filePath = $file->storeAs('uploads', $fileName, 'public');
             $file->move(public_path('uploads'), $fileName);
             $collection = Excel::toArray(new DefenseImport, $filePath);
-            //dd($collection);
+
+            foreach($collection[0] as $row) {
+                $list_of_commission[] = $row['promoter'];
+                $list_of_commission[] = $row['examiner1'];
+                $list_of_commission[] = $row['examiner2'];
+            }
+
+            $list_of_commission = array_unique($list_of_commission);
+
+            dd($list_of_commission);
             $user->usage_count -= 1;
             $user->save();
 
