@@ -121,12 +121,22 @@
                             <span class="flex-1 ml-3 whitespace-nowrap">New Calendar</span>
                         </a>
                     </li>
-                    <li>
+                    
+                    @foreach (Auth::user()->calendars()->get() as $calendar)
+                        <li>
+                            <a href="{{ route('calendar', $calendar->id) }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 {{ (request()->routeIs('calendar.show')) ? 'bg-indigo-600' : '' }}">
+                                <i class='fas fa-calendar-alt'></i>
+                                <span class="flex-1 ml-3 whitespace-nowrap">{{ $calendar['Calendar_Name'] }}</span>
+                            </a>
+                        </li>
+                    @endforeach
+
+                    {{-- <li>
                         <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                             <i class='fas fa-database'></i>
                             <span class="flex-1 ml-3 whitespace-nowrap">All calendars</span>
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
             </div>
         </aside>

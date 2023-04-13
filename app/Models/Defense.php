@@ -10,9 +10,12 @@ class Defense extends Model
     use HasFactory;
 
     protected $fillable = [
-        'examiner',
-        'examiner2',
-        'promoter',
+        'examinerID',
+        'egzaminer_name',
+        'examiner2ID',
+        'egzaminer2_name',
+        'promoterID',
+        'promoter_name',
         'student',
         'CalendarID',
         'EgzamDate'
@@ -20,17 +23,17 @@ class Defense extends Model
 
     public function examiner()
     {
-        return $this->belongsTo(Teacher::class, 'examiner', 'Teacher-ID');
+        return $this->belongsTo(Teacher::class, 'examinerID', 'Teacher-ID');
     }
 
     public function examiner2()
     {
-        return $this->belongsTo(Teacher::class, 'examiner2', 'Teacher-ID');
+        return $this->belongsTo(Teacher::class, 'examiner2ID', 'Teacher-ID');
     }
 
     public function promoter()
     {
-        return $this->belongsTo(Teacher::class, 'promoter', 'Teacher-ID');
+        return $this->belongsTo(Teacher::class, 'promoterID', 'Teacher-ID');
     }
 
     public function calendar()

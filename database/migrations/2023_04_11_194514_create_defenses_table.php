@@ -12,26 +12,33 @@ return new class extends Migration {
     {
         Schema::create('defenses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('examiner');
-            $table->unsignedBigInteger('examiner2');
-            $table->unsignedBigInteger('promoter');
+
+            $table->string('egzaminer_name');
+            $table->unsignedBigInteger('examinerID')->nullable();
+
+            $table->string('egzaminer2_name');
+            $table->unsignedBigInteger('examiner2ID')->nullable();
+
+            $table->string('promoter_name');
+            $table->unsignedBigInteger('promoterID')->nullable();
+
             $table->unsignedBigInteger('CalendarID');
-            $table->dateTime('EgzamDate');
+            $table->dateTime('EgzamDate')->nullable();
             $table->string('student');
 
             $table->timestamps();
 
-            $table->foreign('examiner')
+            $table->foreign('examinerID')
                 ->references('Teacher-ID')
                 ->on('teachers')
                 ->onDelete('cascade');
 
-            $table->foreign('examiner2')
+            $table->foreign('examiner2ID')
                 ->references('Teacher-ID')
                 ->on('teachers')
                 ->onDelete('cascade');
 
-            $table->foreign('promoter')
+            $table->foreign('promoterID')
                 ->references('Teacher-ID')
                 ->on('teachers')
                 ->onDelete('cascade');
