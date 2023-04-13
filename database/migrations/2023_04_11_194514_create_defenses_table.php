@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,17 +15,13 @@ return new class extends Migration
             $table->unsignedBigInteger('examiner');
             $table->unsignedBigInteger('examiner2');
             $table->unsignedBigInteger('promoter');
+            $table->unsignedBigInteger('CalendarID');
+            $table->dateTime('EgzamDate');
             $table->string('student');
-            $table->unsignedBigInteger('OwnerID');
 
             $table->timestamps();
 
-            $table->foreign('OwnerID')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
-
-            $table->foreign('examiner') 
+            $table->foreign('examiner')
                 ->references('Teacher-ID')
                 ->on('teachers')
                 ->onDelete('cascade');
@@ -40,6 +35,12 @@ return new class extends Migration
                 ->references('Teacher-ID')
                 ->on('teachers')
                 ->onDelete('cascade');
+
+            $table->foreign('CalendarID')
+                ->references('id')
+                ->on('calendars')
+                ->onDelete('cascade');
+
 
         });
     }

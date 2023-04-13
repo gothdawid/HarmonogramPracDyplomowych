@@ -10,9 +10,8 @@ class Calendar extends Model
     use HasFactory;
 
     protected $fillable = [
-        'time',
         'OwnerID',
-        'DefenseID',
+        'Calendar_Name'
     ];
 
     public function user()
@@ -22,6 +21,6 @@ class Calendar extends Model
 
     public function defenses()
     {
-        return $this->belongsTo(Defense::class, 'DefenseID', 'id');
+        return $this->hasMany(Defense::class, 'CalendarID', 'id');
     }
 }

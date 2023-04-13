@@ -14,18 +14,9 @@ class Defense extends Model
         'examiner2',
         'promoter',
         'student',
-        'OwnerID',
+        'CalendarID',
+        'EgzamDate'
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'OwnerID', 'id');
-    }
-
-    public function calendar()
-    {
-        return $this->hasOne(Calendar::class, 'DefenseID', 'id');
-    }
 
     public function examiner()
     {
@@ -40,5 +31,10 @@ class Defense extends Model
     public function promoter()
     {
         return $this->belongsTo(Teacher::class, 'promoter', 'Teacher-ID');
+    }
+
+    public function calendar()
+    {
+        return $this->belongsTo(Calendar::class, 'CalendarID', 'id');
     }
 }

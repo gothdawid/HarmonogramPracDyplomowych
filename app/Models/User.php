@@ -43,7 +43,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function defenses() {
-        return $this->hasMany(Defense::class, 'OwnerID', 'id');
+    //calendars
+    public function calendars()
+    {
+        return $this->hasMany(Calendar::class, 'OwnerID', 'id');
     }
 }

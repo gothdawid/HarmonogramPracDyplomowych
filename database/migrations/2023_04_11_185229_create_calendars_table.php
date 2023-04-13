@@ -12,21 +12,14 @@ return new class extends Migration {
     {
         Schema::create('calendars', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('time');
             $table->unsignedBigInteger('OwnerID');
-            $table->unsignedBigInteger('DefenseID');
+            $table->string('Calendar_Name');
             $table->timestamps();
 
             $table->foreign('OwnerID')
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
-
-
-
-            $table->foreign('DefenseID')
-                ->references('id')
-                ->on('defenses');
         });
     }
 
