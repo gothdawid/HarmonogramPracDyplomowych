@@ -15,11 +15,13 @@ class Calendar extends Model
         'DefenseID',
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class, 'OwnerID', 'id');
     }
 
-    public function defense() {
+    public function defenses()
+    {
         return $this->belongsTo(Defense::class, 'DefenseID', 'id');
     }
 }
