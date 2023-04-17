@@ -4,9 +4,9 @@
             {{ __('Calendar') }}
         </h2>
     </x-slot>
-    <div class="float-left w-1/5 min-w-170 max-w-200 mr-10">
+    <div class="float-left w-1/6 min-w-120 max-w-200 mr-10 ml-2 pr-5 dark:bg-gray-800 mt-12 rounded-lg">
         <div class="h-full px-3 py-4 overflow-y-auto">
-            <ul class="space-y-2 font-medium w-fit">
+            <ul class="space-y-2 font-medium w-fit ml-2">
                 <li>
                     <a href="{{ route('calendar') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 {{ (request()->routeIs('calendar')) ? 'bg-indigo-600' : '' }}">
                         <i class='fas fa-calendar-alt'></i>
@@ -14,11 +14,11 @@
                     </a>
                 </li>
                 
-                @foreach (Auth::user()->calendars()->get() as $calendar)
+                @foreach (Auth::user()->calendars()->orderBy('created_at', 'desc')->limit(5)->get() as $calendar)
                     <li>
                         <a href="{{ route('calendar', $calendar->id) }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 {{ (request()->routeIs('calendar.show')) ? 'bg-indigo-600' : '' }}">
                             <i class='fas fa-calendar-alt'></i>
-                            <span class="flex-1 ml-3 whitespace-nowrap">{{ $calendar['Calendar_Name'] }}</span>
+                            <span class="flex-1 ml-3 whitespace-nowrap">{{ mb_strimwidth($calendar['Calendar_Name'], 0, 14, '...'); }}</span>
                         </a>
                     </li>
                 @endforeach
