@@ -45,6 +45,8 @@ class ExcelImportController extends Controller
             $list_of_commission = array_unique($list_of_commission);
 
             //dd($list_of_commission);
+        }
+        
         if (
             $request->validate([
                 'file' => 'required|mimes:csv,xlx,xls,xlsx|max:2048'
