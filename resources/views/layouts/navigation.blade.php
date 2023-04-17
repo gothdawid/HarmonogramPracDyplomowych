@@ -22,9 +22,13 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('calendar')" :active="request()->routeIs('calendar')">
+                        {{ __('Calendar') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('import.departments')" :active="request()->routeIs('import.departments')">
                         {{ __('Import departments') }}
                     </x-nav-link>
+                    
                 </div>
             </div>
 
@@ -83,6 +87,9 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('calendar')" :active="request()->routeIs('calendar')">
+                {{ __('Calendar') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
@@ -110,7 +117,6 @@
             </div>
         </div>
     </div>
-
     <div id="side_nav" class="top-0 bottom-0 fixed">
         <aside id="default-sidebar" class="relative bottom-0 left-0 z-40 w-64 h-full transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
             <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
