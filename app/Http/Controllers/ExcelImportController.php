@@ -36,10 +36,15 @@ class ExcelImportController extends Controller
                 'Calendar_Name' => $request->calendar_name,
             ]);
 
-            $list_of_comission = Excel::toArray(new DefenseImport, $file);
+            $defenses_list = Excel::toArray(new DefenseImport, $file);
+            $list_of_commission = [];
 
-            foreach ($list_of_comission as $elem) {
+            foreach ($defenses_list as $elem) {
                 foreach ($elem as $item) {
+                    $list_of_commission[] = $item['examiner1'];
+                    $list_of_commission[] = $item['examiner2'];
+                    $list_of_commission[] = $item['promoter'];
+
                     $defense = new Defense([
                         'student' => $item['student'],
                         'promoter_name' => $item['promoter'],
@@ -67,13 +72,15 @@ class ExcelImportController extends Controller
                 }
             }
 
-            
+
+            $list_of_commission = array_unique($list_of_commission);
+            //dd($list_of_commission);
 
 
             $user->usage_count -= 1;
             $user->save();
 
-            return view('calendar')->with('user_usage', $user->usage_count)->with('collection', $list_of_comission);
+            return view('calendar')->with('user_usage', $user->usage_count)->with('collection', $defenses_list);
         } else {
             session()->flash('error', 'Please upload a valid file');
             return redirect()->back();
