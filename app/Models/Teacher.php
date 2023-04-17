@@ -15,6 +15,8 @@ class Teacher extends Model
     ];
 
 
-
+    public function calendar() {
+        
+    }
 
 }
