@@ -25,28 +25,6 @@ class ExcelImportController extends Controller
             return redirect()->back();
         }
 
-        if($request->validate([
-            'file' => 'required|mimes:csv,xlx,xls,xlsx|max:2048'
-        ])) {
-            $list_of_commission = [];
-
-            $file = $request->file('file');
-            $fileName = time().'_'.$file->getClientOriginalName();
-            $filePath = $file->storeAs('uploads', $fileName, 'public');
-            $file->move(public_path('uploads'), $fileName);
-            $collection = Excel::toArray(new DefenseImport, $filePath);
-
-            foreach($collection[0] as $row) {
-                $list_of_commission[] = $row['promoter'];
-                $list_of_commission[] = $row['examiner1'];
-                $list_of_commission[] = $row['examiner2'];
-            }
-
-            $list_of_commission = array_unique($list_of_commission);
-
-            //dd($list_of_commission);
-        }
-        
         if (
             $request->validate([
                 'file' => 'required|mimes:csv,xlx,xls,xlsx|max:2048'
@@ -58,10 +36,15 @@ class ExcelImportController extends Controller
                 'Calendar_Name' => $request->calendar_name,
             ]);
 
-            $collection = Excel::toArray(new DefenseImport, $file);
-            //dd($collection);
-            foreach ($collection as $elem) {
+            $defenses_list = Excel::toArray(new DefenseImport, $file);
+            $list_of_commission = [];
+
+            foreach ($defenses_list as $elem) {
                 foreach ($elem as $item) {
+                    $list_of_commission[] = $item['examiner1'];
+                    $list_of_commission[] = $item['examiner2'];
+                    $list_of_commission[] = $item['promoter'];
+
                     $defense = new Defense([
                         'student' => $item['student'],
                         'promoter_name' => $item['promoter'],
@@ -89,12 +72,15 @@ class ExcelImportController extends Controller
                 }
             }
 
-            //$calendar->defenses()->createMany($collection);
+
+            $list_of_commission = array_unique($list_of_commission);
+            //dd($list_of_commission);
+
 
             $user->usage_count -= 1;
             $user->save();
 
-            return view('calendar')->with('user_usage', $user->usage_count)->with('collection', $collection);
+            return view('calendar')->with('user_usage', $user->usage_count)->with('collection', $defenses_list);
         } else {
             session()->flash('error', 'Please upload a valid file');
             return redirect()->back();
