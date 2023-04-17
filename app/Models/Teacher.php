@@ -14,9 +14,9 @@ class Teacher extends Model
         'Teacher-Name',
     ];
 
-
-    public function calendar() {
-        
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class, "Teacher-ID", "Teacher-ID");
     }
 
 }

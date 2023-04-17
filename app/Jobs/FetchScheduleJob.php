@@ -114,9 +114,7 @@ class FetchScheduleJob implements ShouldQueue
                                 }
 
                                 $obj = new Lesson($data);
-
                                 array_push($objects, $data);
-                                break;
                             } catch (\Throwable $th) {
                                 //dd($lesson);
                                 Log::debug($obj);
@@ -133,11 +131,10 @@ class FetchScheduleJob implements ShouldQueue
 
         }
 
-        //print($xmlErrorCount);
-        //Log::debug(print_r($objects));
-        //dd($objects);
-        //$this->modelObj->lessons()->saveMany($objects);
-        $this->modelObj->lessons()->createMany($objects);
-        //Lesson::insert($objects);
+        try {
+            $this->modelObj->lessons()->createMany($objects);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }
