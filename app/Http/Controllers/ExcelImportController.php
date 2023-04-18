@@ -75,6 +75,7 @@ class ExcelImportController extends Controller
 
             $availibilityArray = $this->generateDatesWithAvailibiltyWindows(array_unique($list_of_commission));
             dd($availibilityArray);
+            
 
             $user->usage_count -= 1;
             $user->save();
