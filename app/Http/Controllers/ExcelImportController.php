@@ -44,14 +44,6 @@ class ExcelImportController extends Controller
             //create from defenses list that will generate array with ignore days
             $ignoreDays = [];
 
-            foreach($defenses_list as $elem) {
-                foreach($elem as $item) {
-                    if($item['swieta'] != null) {
-                        $ignoreDays[] = Carbon::now()->year . "-" . $item['swieta'];
-                    }
-                }
-            }
-
             usort($defenses_list[0], function ($a, $b) {
                 return strcmp($b['przewodniczacy'], $a['przewodniczacy']);
             });
@@ -59,7 +51,13 @@ class ExcelImportController extends Controller
             //dd($this->generateDatesFromTime($ignoreDays));
             // dd($defenses_list);
 
-            foreach ($defenses_list as $elem) {    
+            foreach ($defenses_list as $elem) {
+                foreach($elem as $item) {
+                    if($item['swieta'] != null) {
+                        $ignoreDays[] = Carbon::now()->year . "-" . $item['swieta'];
+                    }
+                }
+
                 foreach ($elem as $item) {
                     if ($item['student'] == null || $item['promotor'] == null || $item['recenzent'] == null || $item['przewodniczacy'] == null)
                         continue;
