@@ -41,6 +41,8 @@ class ExcelImportController extends Controller
 
             foreach ($defenses_list as $elem) {
                 foreach ($elem as $item) {
+                    if ($item['student'] == null || $item['promoter'] == null || $item['examiner1'] == null || $item['examiner2'] == null)
+                        continue;
                     $list_of_commission[] = $item['examiner1'];
                     $list_of_commission[] = $item['examiner2'];
                     $list_of_commission[] = $item['promoter'];
