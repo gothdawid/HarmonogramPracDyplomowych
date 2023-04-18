@@ -46,36 +46,35 @@ class ExcelImportController extends Controller
                     $list_of_commission[] = $item['examiner2'];
                     $list_of_commission[] = $item['promoter'];
 
-                    // $defense = new Defense([
-                    //     'student' => $item['student'],
-                    //     'promoter_name' => $item['promoter'],
-                    //     'egzaminer_name' => $item['examiner1'],
-                    //     'egzaminer2_name' => $item['examiner2'],
-                    // ]);
-                    // try {
-                    //     $defense->examiner()->associate(Teacher::where('Teacher-Name', $item['examiner1'])->firstOrFail());
-                    // } catch (\Throwable $th) {
-                    //     session()->flash('error', 'Examiner ' . $item['examiner1'] . ' does not exist in database');
-                    // }
-                    // try {
-                    //     $defense->examiner2()->associate(Teacher::where('Teacher-Name', $item['examiner2'])->firstOrFail());
-                    // } catch (\Throwable $th) {
-                    //     session()->flash('error', 'Examiner ' . $item['examiner2'] . ' does not exist in database');
-                    // }
-                    // try {
-                    //     $defense->promoter()->associate(Teacher::where('Teacher-Name', $item['promoter'])->firstOrFail());
-                    // } catch (\Throwable $th) {
-                    //     session()->flash('error', 'Promoter ' . $item['promoter'] . ' does not exist in database');
-                    // }
+                    $defense = new Defense([
+                        'student' => $item['student'],
+                        'promoter_name' => $item['promoter'],
+                        'egzaminer_name' => $item['examiner1'],
+                        'egzaminer2_name' => $item['examiner2'],
+                    ]);
+                    try {
+                        $defense->examiner()->associate(Teacher::where('Teacher-Name', $item['examiner1'])->firstOrFail());
+                    } catch (\Throwable $th) {
+                        session()->flash('error', 'Examiner ' . $item['examiner1'] . ' does not exist in database');
+                    }
+                    try {
+                        $defense->examiner2()->associate(Teacher::where('Teacher-Name', $item['examiner2'])->firstOrFail());
+                    } catch (\Throwable $th) {
+                        session()->flash('error', 'Examiner ' . $item['examiner2'] . ' does not exist in database');
+                    }
+                    try {
+                        $defense->promoter()->associate(Teacher::where('Teacher-Name', $item['promoter'])->firstOrFail());
+                    } catch (\Throwable $th) {
+                        session()->flash('error', 'Promoter ' . $item['promoter'] . ' does not exist in database');
+                    }
 
-                    // //dd($defense);
-                    // $calendar->defenses()->save($defense);
+                    //dd($defense);
+                    $calendar->defenses()->save($defense);
                 }
             }
 
 
             $list_of_commission = array_unique($list_of_commission);
-            //dd($list_of_commission);
 
             $days = [];
             $today = Carbon::now();
@@ -158,6 +157,8 @@ class ExcelImportController extends Controller
                 }
             }
 
+            //1 - teacher is not available
+            //0 - teacher is available
             dd($days);
 
             $user->usage_count -= 1;
