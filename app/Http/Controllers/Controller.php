@@ -45,7 +45,7 @@ class Controller extends BaseController
         return $dates;
     }
 
-    function check_hours_range($lesson_start, $lesson_end, $window_start, $window_end) {
+    function checkHoursRange($lesson_start, $lesson_end, $window_start, $window_end) {
         if (($lesson_start <= $window_start && $window_start <= $lesson_end) || 
             ($lesson_start <= $window_end && $window_end <= $lesson_end) || 
             ($window_start <= $lesson_start && $lesson_start <= $window_end) || 
