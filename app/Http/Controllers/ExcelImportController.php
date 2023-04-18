@@ -82,13 +82,22 @@ class ExcelImportController extends Controller
 
             $hours = [540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900, 930, 960];
 
-            function check_hours_range($hour_start, $hour_end, $specific_hour_start, $specific_hour_end) {
-                if (($hour_start < $specific_hour_start && $hour_end < $specific_hour_start) || ($hour_start > $specific_hour_end && $hour_end > $specific_hour_end)) {
-                    return false; // the hours are not in range of the specific hour
+            //1 - lesson
+            //2 - window
+
+            //****** TO JEST OK ******//
+            function check_hours_range($lesson_start, $lesson_end, $window_start, $window_end) {
+                if (($lesson_start <= $window_start && $window_start <= $lesson_end) || 
+                    ($lesson_start <= $window_end && $window_end <= $lesson_end) || 
+                    ($window_start <= $lesson_start && $lesson_start <= $window_end) || 
+                    ($window_start <= $lesson_end && $lesson_end <= $window_end)){
+                    return true; // the hours are not available
                 } else {
-                    return true; // the hours are in range of the specific hour
+                    return false; // the hours are available
                 }
             }
+
+           //dd(check_hours_range(660, 750, 645, 675));
 
             function minutesToTime($minutes) {
                 $hours = floor($minutes / 60);
@@ -96,7 +105,15 @@ class ExcelImportController extends Controller
                 return sprintf('%02d:%02d', $hours, $minutes);
             }
 
-            // dd($today->format('Y-m-d'));
+            function generateDatesFromTime() {
+                $dates = [];
+                $today = Carbon::now();
+                for ($i = 0; $i < 14; $i++) {
+                    $dates[] = $today->format('Y-m-d');
+                    $today->addDay();
+                }
+                return $dates;
+            }
 
             //ID   |   Godziny  | 111 | 222 | 333 |
                 // |------------|-----|-----|-----|
@@ -124,33 +141,21 @@ class ExcelImportController extends Controller
                     continue;
 
                 $lessons = $teacher->lessons()->get();
+                $datesArray = generateDates();
 
-                foreach ($lessons as $lesson) {
-                    if(!empty($lesson['TERMIN_DT'])){
-                        if($lesson['OD_GODZ'] < 540 || $lesson['OD_GODZ'] > 960 || $lesson['DAY'] == '6' || $lesson['DAY'] == '7' || $lesson['DAY'] == '10')
-                            continue;
+                foreach($datesArray as $date){
+                    foreach($hours as $hour){
+                        $day = Carbon::parse($date)->format('l');
+                        $days[$hour . " - " . minutesToTime($hour)][$date . $day][$teacher['Teacher-ID']] = 0;
 
-                        $datesArray = explode(";", $lesson['TERMIN_DT']);
-
-                        foreach($datesArray as $date){
-                            // $date_start = $date . ' ' . $lesson['G_OD'];
-                            // $date_end = $date . ' ' . $lesson['G_DO'];
-                            // $date = Carbon::parse($date_start);
-
-                            foreach($hours as $hour){
-                                //dd(check_hours_range($lesson['OD_GODZ'], $lesson['DO_GODZ'], $hour, $hour + 30));
-                                if(check_hours_range($lesson['OD_GODZ'], $lesson['DO_GODZ'], $hour, $hour + 30)){
-                                    $days[$hour . " - " . minutesToTime($hour)][$date][$teacher['Teacher-ID']] = 1;
-                                } else {
-                                    $days[$hour . " - " . minutesToTime($hour)][$date][$teacher['Teacher-ID']] = 0;
-                                }
+                        foreach ($lessons as $lesson) {
+                            $datesTermins = explode(";", $lesson['TERMIN_DT']);
+                            if(check_hours_range($lesson['OD_GODZ'], $lesson['DO_GODZ'], $hour, $hour + 30) && in_array($date, $datesTermins)){
+                                $days[$hour . " - " . minutesToTime($hour)][$date . $day][$teacher['Teacher-ID']] = 1;
                             }
                         }
                     }
                 }
-
-                if($i == 3)
-                    break;
             }
 
             dd($days);
