@@ -38,15 +38,10 @@ class ExcelImportController extends Controller {
 
             $list_of_commission = [];
 
-            //create from defenses list that will generate array with ignore days
             $ignoreDays = [];
-
             usort($defenses_list[0], function ($a, $b) {
                 return strcmp($b['przewodniczacy'], $a['przewodniczacy']);
             });
-
-            //dd($this->generateDatesFromTime($ignoreDays));
-            // dd($defenses_list);
 
             foreach ($defenses_list as $elem) {
                 foreach ($elem as $item) {
@@ -87,12 +82,15 @@ class ExcelImportController extends Controller {
                         session()->flash('error', 'Promoter ' . $item['promotor'] . ' does not exist in database');
                     }
 
-                    //dd($defense);
                     $calendar->defenses()->save($defense);
                 }
             }
 
             $availibilityArray = $this->generateDatesWithAvailibiltyWindows(array_unique($list_of_commission), $ignoreDays);
+
+            $obrony = $calendar->defenses()->get();
+            foreach($obrony as $obrona) {
+                $obrona['EgzamDate'] = $this->findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID);
 
             function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string {
                 foreach ($data as $date => $dates) {
@@ -124,10 +122,6 @@ class ExcelImportController extends Controller {
                 $obrona->save();
             }
 
-
-
-            //dd($availibilityArray);
-
             $user->usage_count -= 1;
             $user->save();
 
@@ -136,6 +130,5 @@ class ExcelImportController extends Controller {
             session()->flash('error', 'Please upload a valid file');
             return redirect()->back();
         }
-        //$collection = Excel::toArray(new DefenseImport, 'E:\Downloads\defenses.xlsx');
     }
 }
