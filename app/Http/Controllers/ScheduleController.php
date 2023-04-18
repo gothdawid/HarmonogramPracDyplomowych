@@ -9,10 +9,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\FetchScheduleJob;
 
-class ScheduleController extends Controller
-{
-    public function import_deps()
-    {
+class ScheduleController extends Controller {
+    public function import_deps() {
 
         $_job = new FetchScheduleJob(null);
         $xmlDepartmentsObject = $_job->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialow.xml');
@@ -58,8 +56,7 @@ class ScheduleController extends Controller
         ]);
     }
 
-    public function download_dep(Request $request, $id)
-    {
+    public function download_dep(Request $request, $id) {
         Log::notice($id);
         $department = Department::where('Departament-ID', $id)->first();
         if ($department) {
@@ -74,7 +71,6 @@ class ScheduleController extends Controller
                 print($id);
             } else
                 print("no");
-
         } else {
             $department = new Department();
             $department['Departament-ID'] = $id;
@@ -89,7 +85,6 @@ class ScheduleController extends Controller
                 $job::dispatch($department);
             } catch (\Exception $e) {
                 Log::error($e);
-
             }
 
             print($id);

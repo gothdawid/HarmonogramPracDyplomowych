@@ -10,16 +10,13 @@ use App\Imports\DefenseImport;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class ExcelImportController extends Controller
-{
-    public function form()
-    {
+class ExcelImportController extends Controller {
+    public function form() {
         $user = Auth::user();
         return view('calendar')->with('user_usage', $user->usage_count);
     }
 
-    public function import(Request $request)
-    {
+    public function import(Request $request) {
         $user = Auth::user();
         if ($user->usage_count < -10000000) {
             session()->flash('error', 'You have reached your maximum number of imports');
@@ -47,8 +44,8 @@ class ExcelImportController extends Controller
             });
 
             foreach ($defenses_list as $elem) {
-                foreach($elem as $item) {
-                    if($item['swieta'] != null) {
+                foreach ($elem as $item) {
+                    if ($item['swieta'] != null) {
                         $ignoreDays[] = Carbon::now()->year . "-" . $item['swieta'];
                     }
                 }
@@ -90,10 +87,38 @@ class ExcelImportController extends Controller
             }
 
             $availibilityArray = $this->generateDatesWithAvailibiltyWindows(array_unique($list_of_commission), $ignoreDays);
-            
+
             $obrony = $calendar->defenses()->get();
             foreach($obrony as $obrona) {
                 $obrona['EgzamDate'] = $this->findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID);
+
+            function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string {
+                foreach ($data as $date => $dates) {
+                    foreach ($dates as $window => $values) {
+                        if (
+                            isset($values[$key1]) && $values[$key1] === 0 &&
+                            isset($values[$key2]) && $values[$key2] === 0 &&
+                            isset($values[$key3]) && $values[$key3] === 0
+                        ) {
+                            $data[$date][$window][$key1] = -1;
+                            $data[$date][$window][$key2] = -1;
+                            $data[$date][$window][$key3] = -1;
+                            $dateOfDefense = Carbon::parse($date)->format('Y-m-d') . " " . $window;
+                            return Carbon::parse($dateOfDefense)->format('Y-m-d H:i:s');
+                        }
+                    }
+                }
+
+                return null;
+            }
+            // dd($availibilityArray);
+
+            $obrony = $calendar->defenses()->get();
+
+            foreach ($obrony as $obrona) {
+                $obrona['EgzamDate'] = findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID);
+                // $def[] = findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID) . " " . $obrona->student;
+                //dd($obrona['EXAM_DATE']);
                 $obrona->save();
             }
 
