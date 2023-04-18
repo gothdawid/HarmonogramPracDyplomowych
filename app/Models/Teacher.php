@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Teacher extends Model
-{
+class Teacher extends Model {
     use HasFactory;
 
     protected $fillable = [
@@ -14,9 +13,7 @@ class Teacher extends Model
         'Teacher-Name',
     ];
 
-    public function lessons()
-    {
+    public function lessons() {
         return $this->hasMany(Lesson::class, "Teacher-ID", "Teacher-ID");
     }
-
 }

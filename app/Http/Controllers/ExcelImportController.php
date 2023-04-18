@@ -10,16 +10,13 @@ use App\Imports\DefenseImport;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class ExcelImportController extends Controller
-{
-    public function form()
-    {
+class ExcelImportController extends Controller {
+    public function form() {
         $user = Auth::user();
         return view('calendar')->with('user_usage', $user->usage_count);
     }
 
-    public function import(Request $request)
-    {
+    public function import(Request $request) {
         $user = Auth::user();
         if ($user->usage_count < -10000000) {
             session()->flash('error', 'You have reached your maximum number of imports');
@@ -97,8 +94,7 @@ class ExcelImportController extends Controller
 
             $availibilityArray = $this->generateDatesWithAvailibiltyWindows(array_unique($list_of_commission), $ignoreDays);
 
-            function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string
-            {
+            function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string {
                 foreach ($data as $date => $dates) {
                     foreach ($dates as $window => $values) {
                         if (

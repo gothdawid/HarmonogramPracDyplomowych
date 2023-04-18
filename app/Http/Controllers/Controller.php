@@ -8,14 +8,12 @@ use Illuminate\Routing\Controller as BaseController;
 use Carbon\Carbon;
 use App\Models\Teacher;
 
-class Controller extends BaseController
-{
+class Controller extends BaseController {
     use AuthorizesRequests, ValidatesRequests;
 
     public $hours = [540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900, 930, 960];
 
-    function generateDatesFromTime($ignoreDays = [])
-    {
+    function generateDatesFromTime($ignoreDays = []) {
         $dates = [];
         $today = Carbon::now()->addDays(11);
         $holidays = [
@@ -51,8 +49,7 @@ class Controller extends BaseController
         return $dates;
     }
 
-    function checkHoursRange($lesson_start, $lesson_end, $window_start, $window_end)
-    {
+    function checkHoursRange($lesson_start, $lesson_end, $window_start, $window_end) {
         if (
             ($lesson_start <= $window_start && $window_start <= $lesson_end) ||
             ($lesson_start <= $window_end && $window_end <= $lesson_end) ||
@@ -65,15 +62,13 @@ class Controller extends BaseController
         }
     }
 
-    function minutesToTime($minutes)
-    {
+    function minutesToTime($minutes) {
         $hours = floor($minutes / 60);
         $minutes %= 60;
         return sprintf('%02d:%02d', $hours, $minutes);
     }
 
-    function generateDatesWithAvailibiltyWindows($list_of_commission, $ignoreDays = [])
-    {
+    function generateDatesWithAvailibiltyWindows($list_of_commission, $ignoreDays = []) {
         $availibilityArray = [];
 
         $i = 0;

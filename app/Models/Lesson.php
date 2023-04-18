@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Lesson extends Model
-{
+class Lesson extends Model {
     use HasFactory;
     protected $fillable = [
         'Departament-ID',
@@ -27,13 +26,11 @@ class Lesson extends Model
         'TERMIN_DT'
     ];
 
-    public function department()
-    {
+    public function department() {
         return $this->belongsTo(Department::class, 'Departament-ID', 'Departament-ID');
     }
 
-    public function teacher()
-    {
+    public function teacher() {
         return $this->belongsTo(Teacher::class, 'Teacher-ID', 'Teacher-ID');
     }
 }

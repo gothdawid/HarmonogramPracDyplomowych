@@ -14,21 +14,18 @@ use App\Models\Lesson;
 use App\Models\Teacher;
 
 
-class FetchScheduleJob implements ShouldQueue
-{
+class FetchScheduleJob implements ShouldQueue {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
      */
     private $modelObj;
-    public function __construct($modelObj)
-    {
+    public function __construct($modelObj) {
         $this->modelObj = $modelObj;
     }
 
-    public function fetchXmlData(string $xmlUrl): array
-    {
+    public function fetchXmlData(string $xmlUrl): array {
         $cacheKey = 'xml_' . md5($xmlUrl);
 
         // Check if data is cached
@@ -53,8 +50,7 @@ class FetchScheduleJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
-    {
+    public function handle(): void {
         $xmlErrorCount = 0;
 
         $xmlTeachersObject = $this->fetchXmlData('http://www.plan.uz.zgora.pl/static_files/nauczyciel_lista_wydzialu.ID=' . $this->modelObj['Departament-ID'] . '.xml');
