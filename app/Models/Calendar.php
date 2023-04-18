@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Calendar extends Model
-{
+class Calendar extends Model {
     use HasFactory;
 
     protected $fillable = [
@@ -14,13 +13,11 @@ class Calendar extends Model
         'Calendar_Name'
     ];
 
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class, 'OwnerID', 'id');
     }
 
-    public function defenses()
-    {
+    public function defenses() {
         return $this->hasMany(Defense::class, 'CalendarID', 'id');
     }
 }
