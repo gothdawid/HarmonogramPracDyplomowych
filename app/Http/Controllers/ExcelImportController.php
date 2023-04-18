@@ -59,6 +59,7 @@ class ExcelImportController extends Controller
                 }
 
                 foreach ($elem as $item) {
+
                     if ($item['student'] == null || $item['promotor'] == null || $item['recenzent'] == null || $item['przewodniczacy'] == null)
                         continue;
 
