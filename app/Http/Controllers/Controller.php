@@ -67,7 +67,7 @@ class Controller extends BaseController
 
         $i = 0;
 
-        foreach ($list_of_commission as $teacher) {
+        foreach($list_of_commission as $teacher) {
             $i++;
             $teacher = Teacher::where('Teacher-Name', $teacher)->first();
             if($teacher == null)
@@ -81,12 +81,12 @@ class Controller extends BaseController
             foreach($datesArray as $date){
                 foreach($this->hours as $hour){
                     $day = Carbon::parse($date)->format('l');
-                    $availibilityArray[$hour . " - " . $this->minutesToTime($hour)][$date . $day][$teacher['Teacher-ID']] = 0;
+                    $availibilityArray[/*$hour . " - " . */$this->minutesToTime($hour)][$date . $day][$teacher['Teacher-ID']] = 0;
 
-                    foreach ($lessons as $lesson) {
+                    foreach($lessons as $lesson) {
                         $datesTermins = explode(";", $lesson['TERMIN_DT']);
                         if($this->checkHoursRange($lesson['OD_GODZ'], $lesson['DO_GODZ'], $hour, $hour + 30) && in_array($date, $datesTermins)){
-                            $availibilityArray[$hour . " - " . $this->minutesToTime($hour)][$date . $day][$teacher['Teacher-ID']] = 1;
+                            $availibilityArray[/*$hour . " - " . */$this->minutesToTime($hour)][$date . $day][$teacher['Teacher-ID']] = 1;
                         }
                     }
                 }

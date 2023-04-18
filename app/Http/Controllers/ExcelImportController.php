@@ -52,6 +52,7 @@ class ExcelImportController extends Controller
                         'egzaminer_name' => $item['examiner1'],
                         'egzaminer2_name' => $item['examiner2'],
                     ]);
+
                     try {
                         $defense->examiner()->associate(Teacher::where('Teacher-Name', $item['examiner1'])->firstOrFail());
                     } catch (\Throwable $th) {
@@ -74,7 +75,43 @@ class ExcelImportController extends Controller
             }
 
             $availibilityArray = $this->generateDatesWithAvailibiltyWindows(array_unique($list_of_commission));
-            dd($availibilityArray);
+
+            function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string
+            {
+                foreach ($data as $window => $dates) {
+                    foreach ($dates as $date => $values) {
+                        if (
+                            isset($values[$key1]) && $values[$key1] === 0 &&
+                            isset($values[$key2]) && $values[$key2] === 0 &&
+                            isset($values[$key3]) && $values[$key3] === 0
+                        ) {
+                            $data[$window][$date][$key1] = -1;
+                            $data[$window][$date][$key2] = -1;
+                            $data[$window][$date][$key3] = -1;
+                            $dateOfDefense = Carbon::parse($date)->format('Y-m-d') . " " . $window ;
+                            return Carbon::parse($dateOfDefense)->format('Y-m-d H:i:s');
+                        }
+                    }
+                }
+                
+                return null;
+            }
+
+            
+            $obrony = $calendar->defenses()->get();
+
+            $def;
+
+            foreach($obrony as $obrona) {
+                // $obrona['EgzamDate'] = findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID);
+                $def[] = findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID) . " " . $obrona->student;
+                //dd($obrona['EXAM_DATE']);
+                //$obrona->save();
+            }
+
+
+
+            dd($def);
 
             $user->usage_count -= 1;
             $user->save();
