@@ -81,12 +81,12 @@ class Controller extends BaseController
             foreach($datesArray as $date){
                 foreach($this->hours as $hour){
                     $day = Carbon::parse($date)->format('l');
-                    $availibilityArray[/*$hour . " - " . */$this->minutesToTime($hour)][$date . $day][$teacher['Teacher-ID']] = 0;
+                    $availibilityArray[$date . $day][/*$hour . " - " . */$this->minutesToTime($hour)][$teacher['Teacher-ID']] = 0;
 
                     foreach($lessons as $lesson) {
                         $datesTermins = explode(";", $lesson['TERMIN_DT']);
                         if($this->checkHoursRange($lesson['OD_GODZ'], $lesson['DO_GODZ'], $hour, $hour + 30) && in_array($date, $datesTermins)){
-                            $availibilityArray[/*$hour . " - " . */$this->minutesToTime($hour)][$date . $day][$teacher['Teacher-ID']] = 1;
+                            $availibilityArray[$date . $day][/*$hour . " - " . */$this->minutesToTime($hour)][$teacher['Teacher-ID']] = 1;
                         }
                     }
                 }
