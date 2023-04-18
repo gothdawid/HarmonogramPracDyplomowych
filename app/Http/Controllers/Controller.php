@@ -101,4 +101,25 @@ class Controller extends BaseController
         return $availibilityArray;
     }
 
+    function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string
+    {
+        foreach ($data as $date => $dates) {
+            foreach ($dates as $window => $values) {
+                if (
+                    isset($values[$key1]) && $values[$key1] === 0 &&
+                    isset($values[$key2]) && $values[$key2] === 0 &&
+                    isset($values[$key3]) && $values[$key3] === 0
+                ) {
+                    $data[$date][$window][$key1] = -1;
+                    $data[$date][$window][$key2] = -1;
+                    $data[$date][$window][$key3] = -1;
+                    $dateOfDefense = Carbon::parse($date)->format('Y-m-d') . " " . $window ;
+                    return Carbon::parse($dateOfDefense)->format('Y-m-d H:i:s');
+                }
+            }
+        }
+        
+        return null;
+    }
+
 }
