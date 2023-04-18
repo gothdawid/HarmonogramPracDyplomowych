@@ -52,8 +52,8 @@ class ExcelImportController extends Controller
             // dd($defenses_list);
 
             foreach ($defenses_list as $elem) {
-                foreach($elem as $item) {
-                    if($item['swieta'] != null) {
+                foreach ($elem as $item) {
+                    if ($item['swieta'] != null) {
                         $ignoreDays[] = Carbon::now()->year . "-" . $item['swieta'];
                     }
                 }
@@ -109,19 +109,19 @@ class ExcelImportController extends Controller
                             $data[$date][$window][$key1] = -1;
                             $data[$date][$window][$key2] = -1;
                             $data[$date][$window][$key3] = -1;
-                            $dateOfDefense = Carbon::parse($date)->format('Y-m-d') . " " . $window ;
+                            $dateOfDefense = Carbon::parse($date)->format('Y-m-d') . " " . $window;
                             return Carbon::parse($dateOfDefense)->format('Y-m-d H:i:s');
                         }
                     }
                 }
-                
+
                 return null;
             }
             // dd($availibilityArray);
-            
+
             $obrony = $calendar->defenses()->get();
 
-            foreach($obrony as $obrona) {
+            foreach ($obrony as $obrona) {
                 $obrona['EgzamDate'] = findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID);
                 // $def[] = findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID) . " " . $obrona->student;
                 //dd($obrona['EXAM_DATE']);

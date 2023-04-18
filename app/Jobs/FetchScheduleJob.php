@@ -128,7 +128,6 @@ class FetchScheduleJob implements ShouldQueue
                     $xmlErrorCount++;
                 }
             }
-
         }
 
         try {
