@@ -85,7 +85,7 @@ class Controller extends BaseController
 
                     foreach ($lessons as $lesson) {
                         $datesTermins = explode(";", $lesson['TERMIN_DT']);
-                        if($this->check_hours_range($lesson['OD_GODZ'], $lesson['DO_GODZ'], $hour, $hour + 30) && in_array($date, $datesTermins)){
+                        if($this->checkHoursRange($lesson['OD_GODZ'], $lesson['DO_GODZ'], $hour, $hour + 30) && in_array($date, $datesTermins)){
                             $availibilityArray[$hour . " - " . $this->minutesToTime($hour)][$date . $day][$teacher['Teacher-ID']] = 1;
                         }
                     }
