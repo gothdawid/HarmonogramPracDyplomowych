@@ -41,33 +41,54 @@ class ExcelImportController extends Controller
 
             $list_of_commission = [];
 
-            foreach ($defenses_list as $elem) {
+            //create from defenses list that will generate array with ignore days
+            $ignoreDays = [];
+
+            foreach($defenses_list as $elem) {
+                foreach($elem as $item) {
+                    if($item['swieta'] != null) {
+                        $ignoreDays[] = Carbon::now()->year . "-" . $item['swieta'];
+                    }
+                }
+            }
+
+            usort($defenses_list[0], function ($a, $b) {
+                return strcmp($b['przewodniczacy'], $a['przewodniczacy']);
+            });
+
+            //dd($this->generateDatesFromTime($ignoreDays));
+            // dd($defenses_list);
+
+            foreach ($defenses_list as $elem) {    
                 foreach ($elem as $item) {
-                    $list_of_commission[] = $item['examiner1'];
-                    $list_of_commission[] = $item['examiner2'];
-                    $list_of_commission[] = $item['promoter'];
+                    if ($item['student'] == null || $item['promotor'] == null || $item['recenzent'] == null || $item['przewodniczacy'] == null)
+                        continue;
+
+                    $list_of_commission[] = $item['recenzent'];
+                    $list_of_commission[] = $item['przewodniczacy'];
+                    $list_of_commission[] = $item['promotor'];
 
                     $defense = new Defense([
                         'student' => $item['student'],
-                        'promoter_name' => $item['promoter'],
-                        'egzaminer_name' => $item['examiner1'],
-                        'egzaminer2_name' => $item['examiner2'],
+                        'promoter_name' => $item['promotor'],
+                        'egzaminer_name' => $item['recenzent'],
+                        'egzaminer2_name' => $item['przewodniczacy'],
                     ]);
 
                     try {
-                        $defense->examiner()->associate(Teacher::where('Teacher-Name', $item['examiner1'])->firstOrFail());
+                        $defense->examiner()->associate(Teacher::where('Teacher-Name', $item['recenzent'])->firstOrFail());
                     } catch (\Throwable $th) {
-                        session()->flash('error', 'Examiner ' . $item['examiner1'] . ' does not exist in database');
+                        session()->flash('error', 'Examiner ' . $item['recenzent'] . ' does not exist in database');
                     }
                     try {
-                        $defense->examiner2()->associate(Teacher::where('Teacher-Name', $item['examiner2'])->firstOrFail());
+                        $defense->examiner2()->associate(Teacher::where('Teacher-Name', $item['przewodniczacy'])->firstOrFail());
                     } catch (\Throwable $th) {
-                        session()->flash('error', 'Examiner ' . $item['examiner2'] . ' does not exist in database');
+                        session()->flash('error', 'Examiner ' . $item['przewodniczacy'] . ' does not exist in database');
                     }
                     try {
-                        $defense->promoter()->associate(Teacher::where('Teacher-Name', $item['promoter'])->firstOrFail());
+                        $defense->promoter()->associate(Teacher::where('Teacher-Name', $item['promotor'])->firstOrFail());
                     } catch (\Throwable $th) {
-                        session()->flash('error', 'Promoter ' . $item['promoter'] . ' does not exist in database');
+                        session()->flash('error', 'Promoter ' . $item['promotor'] . ' does not exist in database');
                     }
 
                     //dd($defense);
@@ -75,7 +96,7 @@ class ExcelImportController extends Controller
                 }
             }
 
-            $availibilityArray = $this->generateDatesWithAvailibiltyWindows(array_unique($list_of_commission));
+            $availibilityArray = $this->generateDatesWithAvailibiltyWindows(array_unique($list_of_commission), $ignoreDays);
 
             function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string
             {
@@ -97,7 +118,7 @@ class ExcelImportController extends Controller
                 
                 return null;
             }
-
+            // dd($availibilityArray);
             
             $obrony = $calendar->defenses()->get();
 

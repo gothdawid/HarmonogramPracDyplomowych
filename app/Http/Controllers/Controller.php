@@ -14,7 +14,7 @@ class Controller extends BaseController
 
     public $hours = [540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900, 930, 960];
 
-    function generateDatesFromTime() {
+    function generateDatesFromTime($ignoreDays = []) {
         $dates = [];
         $today = Carbon::now();
         $holidays = [
@@ -29,6 +29,11 @@ class Controller extends BaseController
             Carbon::createFromDate($today->year, 12, 26)->format('m-d'), // Boże Narodzenie (drugi dzień)
             Carbon::createFromDate($today->year, $today->month, $today->day)->subDays(2)->next(Carbon::THURSDAY)->format('m-d'), // Boże Ciało
         ];
+
+        foreach ($ignoreDays as $day) {
+            $day = new Carbon($day);
+            array_push($holidays, $day->format('m-d'));
+        }
     
         $easter_date = Carbon::createFromDate($today->year, 3, 21)
                                 ->addDays(easter_days($today->year))
@@ -62,7 +67,7 @@ class Controller extends BaseController
         return sprintf('%02d:%02d', $hours, $minutes);
     }
 
-    function generateDatesWithAvailibiltyWindows($list_of_commission) {
+    function generateDatesWithAvailibiltyWindows($list_of_commission, $ignoreDays = []) {
         $availibilityArray = [];
 
         $i = 0;
@@ -74,7 +79,7 @@ class Controller extends BaseController
                 continue;
 
             $lessons = $teacher->lessons()->get();
-            $datesArray = $this->generateDatesFromTime();
+            $datesArray = $this->generateDatesFromTime($ignoreDays);
 
             //1 - teacher is not available
             //0 - teacher is available
