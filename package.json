@@ -17,6 +17,11 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "flowbite": "^1.6.4"
+        "@fullcalendar/core": "^6.1.5",
+        "@fullcalendar/daygrid": "^6.1.5",
+        "@fullcalendar/list": "^6.1.5",
+        "@fullcalendar/timegrid": "^6.1.5",
+        "flowbite": "^1.6.4",
+        "fullcalendar": "^6.1.5"
     }
 }

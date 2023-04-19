@@ -50,6 +50,7 @@
             {{ $slot }}
         </main>
     </div>
+    @stack('scripts')
 </body>
 @include('components.footer')
 

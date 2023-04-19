@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Defense;
 use App\Models\Calendar;
+use Carbon\Carbon;
 
 class ViewCalendarController extends Controller
 {
@@ -15,13 +16,17 @@ class ViewCalendarController extends Controller
 
         $calendar_data = [];
 
-        foreach($calendar_defenses as $key => $defense) {
-            $calendar_data[$key]['student'] = $defense['student'];
-            $calendar_data[$key]['EgzamDate'] = $defense['EgzamDate'];
+        foreach($calendar_defenses as $defense) {
+            $calendar_data[] = [
+                'title' => $defense['student'],
+                'startStr' => Carbon::parse($defense['EgzamDate'])->toIso8601String(),
+                'endStr' => Carbon::parse($defense['EgzamDate'])->addMinutes(30)->toIso8601String(),
+            ];
+            // $calendar_data[]['EgzamDate'] = $defense['EgzamDate'];
         }
 
-        // dd($calendar_data);
+        dd($calendar_data);
 
-        return view('singlecalendar', ['user_calendars' => $user_calendars, 'calendar_data' => $calendar_data]/*, compact('calendar_defenses')*/);
+        return view('singlecalendar', ['user_calendars' => $user_calendars, 'calendar_data' => $calendar_data]/*, compact('calendar_data')*/);
     }
 }

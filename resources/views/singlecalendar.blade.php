@@ -55,8 +55,32 @@
                             </span>
                         </div>
                     @endif
+                    
+
+                    <div id="calendar"></div>
                 </div>
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js"></script>
+        <script> 
+            document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                timeZone: 'UTC',
+                initialView: 'timeGridWeek',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                },
+                events: @json($calendar_data)//'https://fullcalendar.io/api/demo-feeds/events.json'
+            });
+        calendar.render();
+        });
+        </script>
+    @endpush
 </x-app-layout>
