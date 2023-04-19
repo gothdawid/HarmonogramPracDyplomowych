@@ -17,8 +17,8 @@
 
                 @foreach (Auth::user()->calendars()->orderBy('created_at', 'desc')->limit(5)->get() as $calendar)
                     <li>
-                        <a href="{{ route('calendar', $calendar->id) }}"
-                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('calendar.show') ? 'bg-indigo-600' : '' }}">
+                        <a href="{{ route('view.calendar', $calendar->id) }}"
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('view.calendar') ? 'bg-indigo-600' : '' }}">
                             <i class='fas fa-calendar-alt'></i>
                             <span
                                 class="flex-1 ml-3 whitespace-nowrap">{{ mb_strimwidth($calendar['Calendar_Name'], 0, 14, '...') }}</span>
