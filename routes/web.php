@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
 
     //routes for calendar view
     Route::get('/viewcalendar/{id}', [ViewCalendarController::class, 'index'])->name('view.calendar');
+    Route::post('/updateevent', [ViewCalendarController::class, 'save'])->name('save.custom.edited.event');
+    Route::get('/viewcalendar/{id}/delete', [ViewCalendarController::class, 'delete'])->name('delete.calendar');
 
     //Route::get('/schedule', [ScheduleController::class, 'index'])->name('');
     Route::get('/deps/load', [ScheduleController::class, 'import_deps'])->name('import.departments');
