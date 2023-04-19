@@ -15,7 +15,7 @@ class Controller extends BaseController {
 
     function generateDatesFromTime($ignoreDays = []) {
         $dates = [];
-        $today = Carbon::now()->addDays(11);
+        $today = Carbon::now()->addDays(1);
         $holidays = [
             Carbon::createFromDate($today->year, 1, 1)->format('m-d'), // Nowy Rok
             Carbon::createFromDate($today->year, 1, 6)->format('m-d'), // Trzech Króli

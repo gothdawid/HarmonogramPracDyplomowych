@@ -14,6 +14,7 @@
 
     <script src="https://kit.fontawesome.com/8eef1e7b98.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
 
     <!-- Styles -->
     <style>
@@ -50,6 +51,8 @@
             {{ $slot }}
         </main>
     </div>
+
+    @stack('scripts')
 </body>
 @include('components.footer')
 
