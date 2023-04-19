@@ -5,12 +5,6 @@
         </h2>
     </x-slot>
 
-    <style>
-        .fc-content td:hover{
-            background: #adf4fa;
-        }
-    </style>
-
     <div class="float-left w-1/6 min-w-120 max-w-200 mr-10 ml-2 pr-5 dark:bg-gray-800 mt-12 rounded-lg">
         <div class="h-full px-3 py-4 overflow-y-auto">
             <ul class="space-y-2 font-medium w-fit ml-2">
@@ -72,19 +66,27 @@
 
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js"></script>
+        <script src='fullcalendar/lang-all.js'></script>
         <script> 
             document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                timeZone: 'UTC',
+                timeZone: 'GMT',
                 initialView: 'timeGridWeek',
+                initialDate: @json($calendar_start_date),
                 slotMinTime: '9:00:00',
                 slotMaxTime: '16:00:00',
+                slotLabelFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: false,
+                    hour12: false
+                },
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                    right: 'dayGridMonth,timeGridWeek,timeGridTwoDay,timeGridDay,listWeek'
                 },
                 slotDuration: '00:05:00',
                 eventTimeFormat: { // like '14:30:00'
@@ -92,6 +94,13 @@
                     minute: '2-digit',
                     meridiem: false,
                     hour12: false
+                },
+                views: {
+                    timeGridTwoDay: {
+                        type: 'timeGrid',
+                        duration: { days: 2 },
+                        buttonText: 'two days'
+                    }
                 },
                 events: @json($calendar_data)
             });

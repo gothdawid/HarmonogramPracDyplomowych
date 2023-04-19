@@ -15,6 +15,7 @@ class ViewCalendarController extends Controller
         $calendar_defenses = Auth::user()->calendars()->find($id)->defenses()->get();
 
         $calendar_data = [];
+        $calendar_start_date = $calendar_defenses->min('EgzamDate');
 
         foreach($calendar_defenses as $defense) {
             $calendar_data[] = [
@@ -24,6 +25,9 @@ class ViewCalendarController extends Controller
             ];
         }
 
-        return view('singlecalendar', ['user_calendars' => $user_calendars, 'calendar_data' => $calendar_data]);
+        return view('singlecalendar', [
+            'user_calendars' => $user_calendars, 
+            'calendar_data' => $calendar_data,
+            'calendar_start_date' => $calendar_start_date]);
     }
 }
