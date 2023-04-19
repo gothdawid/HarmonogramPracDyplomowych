@@ -45,8 +45,8 @@
     </div>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+            <div class="bg-white bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-white-100">
                     @if (session('error'))
                         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3"
                             role="alert">
@@ -79,8 +79,8 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 timeZone: 'UTC',
                 initialView: 'timeGridWeek',
-                slotMinTime: '8:00:00',
-                slotMaxTime: '19:00:00',
+                slotMinTime: '9:00:00',
+                slotMaxTime: '16:00:00',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
