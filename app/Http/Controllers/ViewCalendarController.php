@@ -19,14 +19,11 @@ class ViewCalendarController extends Controller
         foreach($calendar_defenses as $defense) {
             $calendar_data[] = [
                 'title' => $defense['student'],
-                'startStr' => Carbon::parse($defense['EgzamDate'])->toIso8601String(),
-                'endStr' => Carbon::parse($defense['EgzamDate'])->addMinutes(30)->toIso8601String(),
+                'start' => Carbon::parse($defense['EgzamDate'])->toIso8601String(),
+                'end' => Carbon::parse($defense['EgzamDate'])->addMinutes(30)->toIso8601String(),
             ];
-            // $calendar_data[]['EgzamDate'] = $defense['EgzamDate'];
         }
 
-        dd($calendar_data);
-
-        return view('singlecalendar', ['user_calendars' => $user_calendars, 'calendar_data' => $calendar_data]/*, compact('calendar_data')*/);
+        return view('singlecalendar', ['user_calendars' => $user_calendars, 'calendar_data' => $calendar_data]);
     }
 }

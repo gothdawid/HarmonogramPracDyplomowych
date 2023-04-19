@@ -4,6 +4,13 @@
             {{ __('Single Calendar') }}
         </h2>
     </x-slot>
+
+    <style>
+        .fc-content td:hover{
+            background: #adf4fa;
+        }
+    </style>
+
     <div class="float-left w-1/6 min-w-120 max-w-200 mr-10 ml-2 pr-5 dark:bg-gray-800 mt-12 rounded-lg">
         <div class="h-full px-3 py-4 overflow-y-auto">
             <ul class="space-y-2 font-medium w-fit ml-2">
@@ -72,12 +79,21 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 timeZone: 'UTC',
                 initialView: 'timeGridWeek',
+                slotMinTime: '8:00:00',
+                slotMaxTime: '19:00:00',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
                 },
-                events: @json($calendar_data)//'https://fullcalendar.io/api/demo-feeds/events.json'
+                slotDuration: '00:05:00',
+                eventTimeFormat: { // like '14:30:00'
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: false,
+                    hour12: false
+                },
+                events: @json($calendar_data)
             });
         calendar.render();
         });
