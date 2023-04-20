@@ -71,6 +71,11 @@
                         confirmButtonAriaLabel: 'Okay'
                     })
                 },
+                eventOverlap: function(stillEvent, movingEvent) {
+                    return (!(movingEvent.extendedProps.leader === stillEvent.extendedProps.leader || 
+                            movingEvent.extendedProps.promoter === stillEvent.extendedProps.promoter || 
+                            movingEvent.extendedProps.reviewer === stillEvent.extendedProps.reviewer));
+                },
                 eventChange: function(info) {
                     $.ajaxSetup({
                         headers: {
