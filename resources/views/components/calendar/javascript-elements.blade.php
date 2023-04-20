@@ -97,6 +97,8 @@
                                 icon: 'error',
                                 title: 'Error editing event'
                             })
+
+                            info.revert();
                         }
                     })
                 },
