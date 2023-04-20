@@ -98,11 +98,21 @@
                                     obj_date = new Date(date + ' ' + time); //date and time
                                     string_date_start = obj_date.toISOString(); //date and time to string
                                     string_date_end = new Date(obj_date.setMinutes(obj_date.getMinutes() + 30)).toISOString(); //date and time + 30 minutes to string
+                                    
+                                    var title;
+                                    
+                                    if(data[date][time][info.event.extendedProps.promoter_id] === 1) {
+                                        title = info.event.extendedProps.promoter + ' is not available';
+                                    } else if(data[date][time][info.event.extendedProps.reviewer_id] === 1) {
+                                        title = info.event.extendedProps.reviewer + ' is not available';
+                                    } else if(data[date][time][info.event.extendedProps.leader_id] === 1) {
+                                        title = info.event.extendedProps.leader + ' is not available';
+                                    }
 
                                     //add event
                                     calendar.addEvent({
                                         id: info.event.extendedProps.leader_id,
-                                        title: 'Commsion lessons',
+                                        title: title,
                                         start: string_date_start,
                                         end: string_date_end,
                                         editable: false,
