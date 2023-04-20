@@ -24,6 +24,14 @@ class ViewCalendarController extends Controller
                 'title' => $defense['student'] . ' (Przewodniczący: ' . $defense['egzaminer2_name'] . ', Recenzent: ' . $defense['egzaminer_name'] . ', Promotor: ' . $defense['promoter_name'] . ')',
                 'start' => Carbon::parse($defense['EgzamDate'])->toIso8601String(),
                 'end' => Carbon::parse($defense['EgzamDate'])->addMinutes(30)->toIso8601String(),
+                'extendedProps' => [
+                    'student' => $defense['student'],
+                    'leader' => $defense['egzaminer2_name'],
+                    'promoter' => $defense['promoter_name'],
+                    'reviewer' => $defense['egzaminer_name'],
+                    'timeStart' => Carbon::parse($defense['EgzamDate'])->format('Y-m-d H:i'),
+                    'timeEnd' => Carbon::parse($defense['EgzamDate'])->addMinutes(30)->format('Y-m-d H:i')
+                ]
             ];
         }
 

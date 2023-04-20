@@ -25,7 +25,7 @@
                 initialView: 'timeGridWeek',
                 initialDate: @json($calendar_start_date),
                 slotMinTime: '9:00:00',
-                slotMaxTime: '16:00:00',
+                slotMaxTime: '16:30:00',
                 slotLabelFormat: {
                     hour: '2-digit',
                     minute: '2-digit',
@@ -35,7 +35,7 @@
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridTwoDay,timeGridDay,listWeek'
+                    right: 'dayGridMonth,timeGridWeek,timeGridTwoDay,timeGridDay,listYear'
                 },
                 slotDuration: '00:05:00',
                 eventTimeFormat: { // like '14:30:00'
@@ -52,13 +52,25 @@
                     }
                 },
                 events: @json($calendar_data),
-                // eventClick: function(info) {
-                //     info.jsEvent.preventDefault(); // don't let the browser navigate
-                //     if (info.event.url) {
-                //         window.open(info.event.url);
-                //     }
-                //     alert('Event: ' + info.event.id);
-                // },
+                eventClick: function(info) {
+                    info.jsEvent.preventDefault(); // don't let the browser navigate
+                    Swal.fire({
+                        title: '<strong>Additional defense info</strong>',
+                        icon: 'info',
+                        html:
+                            '<h3><b>' + info.event.extendedProps.timeStart + ' - ' + info.event.extendedProps.timeEnd + '</b></h3> <br>' +
+                            '<b>Student: </b> ' + info.event.extendedProps.student + '<br>' +
+                            '<b>Leader: </b>' + info.event.extendedProps.leader + '<br>' +
+                            '<b>Promoter: </b>' + info.event.extendedProps.promoter + '<br>' +
+                            '<b>Reviewer: </b>' + info.event.extendedProps.reviewer + '<br>',
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        focusConfirm: true,
+                        confirmButtonText:
+                            '<i class="fa fa-thumbs-up"></i> Okay!',
+                        confirmButtonAriaLabel: 'Okay'
+                    })
+                },
                 eventChange: function(info) {
                     $.ajaxSetup({
                         headers: {
