@@ -82,6 +82,8 @@
                 },
                 eventDragStart: function(info) {
                     /* TODO: optimize this to load into static array all events with commission unavaialbe */
+                    /* IMPORTANT */
+                    /* TODO: check why it is showing sometimes incorrect unavailbility windows*/
 
                     //get availible hours for commsion
                     data = info.event.extendedProps.hours_with_lessons;
