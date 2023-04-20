@@ -76,6 +76,12 @@
                             movingEvent.extendedProps.promoter === stillEvent.extendedProps.promoter || 
                             movingEvent.extendedProps.reviewer === stillEvent.extendedProps.reviewer));
                 },
+                eventDragStart: function(info) {
+                    console.log('start ' + info);
+                },
+                eventDragStop: function(info) {
+                    console.log('start ' + info);
+                },
                 eventChange: function(info) {
                     $.ajaxSetup({
                         headers: {

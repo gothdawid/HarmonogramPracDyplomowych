@@ -18,6 +18,10 @@ class ViewCalendarController extends Controller
         $calendar_data = [];
         $calendar_start_date = $calendar_defenses->min('EgzamDate');
 
+        /* @TODO: 
+            Add global visibility of other users calendar (display accepted calendar on every calendar) 
+        */
+
         foreach($calendar_defenses as $defense) {
             $calendar_data[] = [
                 'id' => $defense['id'],
