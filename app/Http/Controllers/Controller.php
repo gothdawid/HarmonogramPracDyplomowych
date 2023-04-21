@@ -119,11 +119,10 @@ class Controller extends BaseController {
         foreach ($data as $date => $dates) {
             //for each 30 minute window
             foreach ($dates as $window => $values) {
-                if (
-                    isset($values[$key1]) && $values[$key1] === 0 &&
-                    isset($values[$key2]) && $values[$key2] === 0 &&
-                    isset($values[$key3]) && $values[$key3] === 0
-                ) {
+                if (isset($values[$key1]) && $values[$key1] === 0 &&
+                isset($values[$key2]) && $values[$key2] === 0 &&
+                isset($values[$key3]) && $values[$key3] === 0) {
+                    
                     //set keys to -1 to avoid double booking defense
                     $data[$date][$window][$key1] = -1;
                     $data[$date][$window][$key2] = -1;

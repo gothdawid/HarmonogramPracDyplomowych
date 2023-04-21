@@ -76,6 +76,9 @@
                     }
                 },
                 eventOverlap: function(stillEvent, movingEvent) {
+                    if(!$("#prevent_overlapping_defenses").is(":checked")){
+                        return true;
+                    }
                     return (!(movingEvent.extendedProps.leader === stillEvent.extendedProps.leader || 
                             movingEvent.extendedProps.promoter === stillEvent.extendedProps.promoter || 
                             movingEvent.extendedProps.reviewer === stillEvent.extendedProps.reviewer)); //prevent overlapping when there the same person in both defense commission
@@ -83,52 +86,62 @@
                 eventDragStart: function(info) {
                     /* TODO: optimize this to load into static array all events with commission unavaialbe */
                     /* IMPORTANT */
-                    /* TODO: check why it is showing sometimes incorrect unavailbility windows*/
+                    /* TODO: check why it is showing sometimes incorrect unavailbility windows */
 
-                    //get availible hours for commsion
-                    data = info.event.extendedProps.hours_with_lessons;
+                    //lessons = info.event.extendedProps.hours_with_lessons;
 
-                    //for every date
-                    for (let date in data) {
-                        //for every time in specific date
-                        for (let time in data[date]) {
-                                //check if there is a lesson
-                                if (data[date][time][info.event.extendedProps.promoter_id] === 1 || 
-                                    data[date][time][info.event.extendedProps.reviewer_id] === 1 ||
-                                    data[date][time][info.event.extendedProps.leader_id] === 1) {
-
-                                    obj_date = new Date(date + ' ' + time); //date and time
-                                    string_date_start = obj_date.toISOString(); //date and time to string
-                                    string_date_end = new Date(obj_date.setMinutes(obj_date.getMinutes() + 30)).toISOString(); //date and time + 30 minutes to string
-                                    
-                                    var title;
-                                    
-                                    if(data[date][time][info.event.extendedProps.promoter_id] === 1) {
-                                        title = info.event.extendedProps.promoter + ' is not available';
-                                    } else if(data[date][time][info.event.extendedProps.reviewer_id] === 1) {
-                                        title = info.event.extendedProps.reviewer + ' is not available';
-                                    } else if(data[date][time][info.event.extendedProps.leader_id] === 1) {
-                                        title = info.event.extendedProps.leader + ' is not available';
-                                    }
-
-                                    //add event
-                                    calendar.addEvent({
-                                        id: info.event.extendedProps.leader_id,
-                                        title: title,
-                                        start: string_date_start,
-                                        end: string_date_end,
-                                        editable: false,
-                                        display: 'background',
-                                        backgroundColor: '#ff9999',
-                                    });
-                                }
-                        }
+                    // console.log(lessons);
+                    if(!$("#show_lessons").is(":checked")) {
+                        return;
                     }
 
-                    //refresh events
-                    calendar.refetchEvents();
+                    const { extendedProps } = info.event;
+                    const { promoter_id, reviewer_id, leader_id, promoter, reviewer, leader } = extendedProps;
+
+                    for (const [date, times] of Object.entries(extendedProps.hours_with_lessons)) {
+                        for (const [time, lessons] of Object.entries(times)) {
+                            const notAvailable = (
+                                lessons[promoter_id] === 1 ||
+                                lessons[reviewer_id] === 1 ||
+                                lessons[leader_id] === 1
+                            );
+
+                            if (notAvailable) {
+                                const start = new Date(`${date} ${time}`);
+                                const end = new Date(start.getTime() + 30 * 60 * 1000);
+                                
+                                let notAvailableTeachNames = [];
+                                if (lessons[promoter_id] === 1) {
+                                    notAvailableTeachNames.push(promoter);
+                                }
+
+                                if (lessons[reviewer_id] === 1) {
+                                    notAvailableTeachNames.push(reviewer);
+                                }
+
+                                if (lessons[leader_id] === 1) {
+                                    notAvailableTeachNames.push(leader);
+                                }
+                                let title = notAvailableTeachNames.join(' and ') + ' is not available';
+
+
+                                calendar.addEvent({
+                                    id: leader_id,
+                                    title,
+                                    start: start.toISOString(),
+                                    end: end.toISOString(),
+                                    editable: false,
+                                    display: 'background',
+                                    backgroundColor: '#ff9999',
+                                });
+                            }
+                        }
+                    }           
                 },
                 eventDragStop: function(info) {
+                    if(!$("#show_lessons").is(":checked")) {
+                        return;
+                    }
                     //remove events after dropping
                     var events = calendar.getEvents();
                     for (var i = 0; i < events.length; i++) {
@@ -138,9 +151,6 @@
                             events[i].remove();
                         }
                     }
-
-                    //reload events
-                    calendar.refetchEvents();
                 },
                 eventChange: function(info) {
                     $.ajaxSetup({
