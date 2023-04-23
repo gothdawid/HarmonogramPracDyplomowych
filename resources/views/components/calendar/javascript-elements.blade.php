@@ -109,6 +109,26 @@
                             if (notAvailable) {
                                 const start = new Date(`${date} ${time}`);
                                 const end = new Date(start.getTime() + 30 * 60 * 1000);
+
+                                //function for checking DST (Daylight saving time)
+                                Date.prototype.stdTimezoneOffset = function () {
+                                    var jan = new Date(this.getFullYear(), 0, 1);
+                                    var jul = new Date(this.getFullYear(), 6, 1);
+                                    return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+                                }
+
+                                Date.prototype.isDstObserved = function () {
+                                    return this.getTimezoneOffset() < this.stdTimezoneOffset();
+                                }
+
+                                //if DST is observed, add 2 hours, else add 1 hour
+                                if(start.isDstObserved()) {
+                                    start.setHours(start.getHours() + 2);
+                                    end.setHours(end.getHours() + 2);
+                                } else {
+                                    start.setHours(start.getHours() + 1);
+                                    end.setHours(end.getHours() + 1);
+                                }
                                 
                                 let notAvailableTeachNames = [];
                                 if (lessons[promoter_id] === 1) {
@@ -123,7 +143,6 @@
                                     notAvailableTeachNames.push(leader);
                                 }
                                 let title = notAvailableTeachNames.join(' and ') + ' is not available';
-
 
                                 calendar.addEvent({
                                     id: leader_id,
