@@ -11,26 +11,43 @@ use App\Models\Teacher;
 class Controller extends BaseController {
     use AuthorizesRequests, ValidatesRequests;
 
+
+    //public constructor 
+    public function __construct() {
+        date_default_timezone_set('Europe/Warsaw');
+    }
+
+
     public $hours = [540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900, 930, 960];
 
     function generateDatesFromTime($ignoreDays = [], $today) {
         $dates = [];
+        
         if ($today == null) {
             $today = Carbon::now();
         } else {
             $today = new Carbon($today);
         }
 
+        $year = Carbon::now()->year;
+        $easter_date = Carbon::createFromDate($year, 1, 1)->addDays(easter_days($year));
+        $easter_day = $easter_date->format('d');
+        $easter_month = $easter_date->format('m');
+
         $holidays = [
-            Carbon::createFromDate($today->year, 1, 1)->format('m-d'), // Nowy Rok
-            Carbon::createFromDate($today->year, 1, 6)->format('m-d'), // Trzech Króli
-            Carbon::createFromDate($today->year, 5, 1)->format('m-d'), // Święto Pracy
-            Carbon::createFromDate($today->year, 5, 3)->format('m-d'), // Święto Konstytucji 3 Maja
-            Carbon::createFromDate($today->year, 8, 15)->format('m-d'), // Wniebowzięcie Najświętszej Maryi Panny
-            Carbon::createFromDate($today->year, 11, 1)->format('m-d'), // Wszystkich Świętych
-            Carbon::createFromDate($today->year, 11, 11)->format('m-d'), // Narodowe Święto Niepodległości
-            Carbon::createFromDate($today->year, 12, 25)->format('m-d'), // Boże Narodzenie (pierwszy dzień)
-            Carbon::createFromDate($today->year, 12, 26)->format('m-d'), // Boże Narodzenie (drugi dzień)
+            Carbon::createFromDate($year, 1, 1), // Nowy Rok
+            Carbon::createFromDate($year, 1, 6), // Trzech Króli
+            Carbon::createFromDate($year, $easter_month, $easter_day), // Wielkanoc
+            Carbon::createFromDate($year, $easter_month, $easter_day)->addDays(1), // Poniedziałek Wielkanocny
+            Carbon::createFromDate($year, 5, 1), // Święto Pracy
+            Carbon::createFromDate($year, 5, 3), // Święto Konstytucji 3 Maja
+            Carbon::createFromDate($year, $easter_month, $easter_day)->addDays(49), // Zielone Świątki
+            Carbon::createFromDate($year, $easter_month, $easter_day)->addDays(60), // Boże Ciało
+            Carbon::createFromDate($year, 8, 15), // Wniebowzięcie Najświętszej Maryi Panny
+            Carbon::createFromDate($year, 11, 1), // Wszystkich Świętych
+            Carbon::createFromDate($year, 11, 11), // Narodowe Święto Niepodległości
+            Carbon::createFromDate($year, 12, 25), // Boże Narodzenie (pierwszy dzień)
+            Carbon::createFromDate($year, 12, 26) // Boże Narodzenie (drugi dzień)
         ];
 
         foreach ($ignoreDays as $day) {
@@ -112,28 +129,29 @@ class Controller extends BaseController {
         return $availibilityArray;
     }
 
-    function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string
-    {
+    function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string {
         //for each date
         foreach ($data as $date => $dates) {
             //for each 30 minute window
             foreach ($dates as $window => $values) {
-                if (isset($values[$key1]) && $values[$key1] === 0 &&
-                isset($values[$key2]) && $values[$key2] === 0 &&
-                isset($values[$key3]) && $values[$key3] === 0) {
-                    
+                if (
+                    isset($values[$key1]) && $values[$key1] === 0 &&
+                    isset($values[$key2]) && $values[$key2] === 0 &&
+                    isset($values[$key3]) && $values[$key3] === 0
+                ) {
+
                     //set keys to -1 to avoid double booking defense
                     $data[$date][$window][$key1] = -1;
                     $data[$date][$window][$key2] = -1;
                     $data[$date][$window][$key3] = -1;
 
                     //return date with time of defense
-                    $dateOfDefense = Carbon::parse($date)->format('Y-m-d') . " " . $window ;
+                    $dateOfDefense = Carbon::parse($date)->format('Y-m-d') . " " . $window;
                     return Carbon::parse($dateOfDefense)->format('Y-m-d H:i:s');
                 }
             }
         }
-        
+
         return null;
     }
 }
