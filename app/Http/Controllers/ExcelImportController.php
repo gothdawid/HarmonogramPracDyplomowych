@@ -25,10 +25,12 @@ class ExcelImportController extends Controller {
 
         if (
             $request->validate([
+                'date' => 'required|date',
                 'file' => 'required|mimes:csv,xlx,xls,xlsx|max:2048'
             ])
         ) {
             $file = $request->file('file');
+            $date = $request->date;
 
             $calendar = $user->calendars()->create([
                 'Calendar_Name' => $request->calendar_name,
@@ -86,7 +88,7 @@ class ExcelImportController extends Controller {
                 }
             }
 
-            $availibilityArray = $this->generateDatesWithAvailibiltyWindows(array_unique($list_of_commission), $ignoreDays);
+            $availibilityArray = $this->generateDatesWithAvailibiltyWindows(array_unique($list_of_commission), $ignoreDays, $date);
 
             $obrony = $calendar->defenses()->get();
             foreach($obrony as $obrona) {
