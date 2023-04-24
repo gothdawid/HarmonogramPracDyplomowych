@@ -20,8 +20,15 @@ class Controller extends BaseController {
 
     public $hours = [540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900, 930, 960];
 
-    function generateDatesFromTime($ignoreDays = []) {
+    function generateDatesFromTime($ignoreDays = [], $today) {
         $dates = [];
+        
+        if ($today == null) {
+            $today = Carbon::now();
+        } else {
+            $today = new Carbon($today);
+        }
+
         $year = Carbon::now()->year;
         $easter_date = Carbon::createFromDate($year, 1, 1)->addDays(easter_days($year));
         $easter_day = $easter_date->format('d');
@@ -47,11 +54,6 @@ class Controller extends BaseController {
             $day = new Carbon($day);
             array_push($holidays, $day->format('m-d'));
         }
-
-        $easter_date = Carbon::createFromDate($today->year, 3, 21)
-            ->addDays(easter_days($today->year))
-            ->format('m-d');
-        array_push($holidays, $easter_date);
 
         for ($i = 0; count($dates) < 14; $i++) {
             $date = $today->format('Y-m-d');
@@ -82,7 +84,7 @@ class Controller extends BaseController {
         return sprintf('%02d:%02d', $hours, $minutes);
     }
 
-    function generateDatesWithAvailibiltyWindows($list_of_commission, $ignoreDays = []) {
+    function generateDatesWithAvailibiltyWindows($list_of_commission, $ignoreDays = [], $today = null) {
         $availibilityArray = [];
 
         $i = 0;
@@ -97,7 +99,7 @@ class Controller extends BaseController {
 
             //get lessons and generate dates to check with ignored days (holidays) of uni
             $lessons = $teacher->lessons()->get();
-            $datesArray = $this->generateDatesFromTime($ignoreDays);
+            $datesArray = $this->generateDatesFromTime($ignoreDays, $today);
 
             //1 - teacher is not available
             //0 - teacher is available
