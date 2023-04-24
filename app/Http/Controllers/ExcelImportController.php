@@ -26,7 +26,7 @@ class ExcelImportController extends Controller {
         if (
             $request->validate([
                 'date' => 'required|date',
-                'file' => 'required|mimes:csv,xlx,xls,xlsx|max:2048'
+                'file' => 'required|mimes:xlx,xls,xlsx|max:2048'
             ])
         ) {
             $file = $request->file('file');
@@ -41,9 +41,15 @@ class ExcelImportController extends Controller {
             $list_of_commission = [];
 
             $ignoreDays = [];
-            usort($defenses_list[0], function ($a, $b) {
-                return strcmp($b['przewodniczacy'], $a['przewodniczacy']);
-            });
+            try {
+                usort($defenses_list[0], function ($a, $b) {
+                    return strcmp($b['przewodniczacy'], $a['przewodniczacy']);
+                });
+            } catch (\Throwable $e) {
+                session()->flash('error', 'Wrong file');
+                $calendar->delete();
+                return redirect()->back();
+            }
 
             foreach ($defenses_list as $elem) {
                 foreach ($elem as $item) {
@@ -83,17 +89,29 @@ class ExcelImportController extends Controller {
                     } catch (\Throwable $th) {
                         session()->flash('error', 'Promoter ' . $item['promotor'] . ' does not exist in database');
                     }
+                    try {
+                        $calendar->defenses()->save($defense);
+                    } catch (\Throwable $e) {
+                        session()->flash('error', 'Unexpected error');
 
-                    $calendar->defenses()->save($defense);
+                        $calendar->delete();
+                        return redirect()->back();
+                    }
                 }
             }
 
             $availibilityArray = $this->generateDatesWithAvailibiltyWindows(array_unique($list_of_commission), $ignoreDays, $date);
 
             $obrony = $calendar->defenses()->get();
-            foreach($obrony as $obrona) {
-                $obrona['EgzamDate'] = $this->findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID);
-                $obrona->save();
+            foreach ($obrony as $obrona) {
+                try {
+                    $obrona['EgzamDate'] = $this->findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID);
+                    $obrona->save();
+                } catch (\Throwable $e) {
+                    session()->flash('error', 'Unexpected error');
+                    $calendar->delete();
+                    return redirect()->back();
+                }
             }
 
             $user->usage_count -= 1;

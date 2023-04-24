@@ -84,7 +84,8 @@
                         <div class="mb-6">
                             <input
                                 class="appearance-none block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                aria-describedby="user_excel" id="file" name="file" type="file">
+                                aria-describedby="user_excel" id="file" name="file" type="file"
+                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                             <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">Select a
                                 file with excel extension or csv.</div>
                         </div>
