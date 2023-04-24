@@ -10,8 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 
-class ViewCalendarController extends Controller
-{
+class ViewCalendarController extends Controller {
     public function index($id) {
         $user_calendars = Auth::user()->calendars()->orderBy('created_at', 'desc')->limit(5)->get();
         $calendar_defenses = Auth::user()->calendars()->find($id)->defenses()->get();
@@ -25,7 +24,7 @@ class ViewCalendarController extends Controller
             Add global visibility of other users calendar (display accepted calendar on every calendar) 
         */
 
-        foreach($calendar_defenses as $defense) {
+        foreach ($calendar_defenses as $defense) {
             //Cache for 8 hours data about availibilty of teachers to speed up loading page
             $list_of_hours_with_lessons = Cache::remember($defense['egzaminer2_name'] . $defense['promoter_name'] . $defense['egzaminer_name'], $hours, function () use ($defense) {
                 return $this->generateDatesWithAvailibiltyWindows([$defense['egzaminer2_name'], $defense['promoter_name'], $defense['egzaminer_name']]);
@@ -55,10 +54,12 @@ class ViewCalendarController extends Controller
         }
 
         return view('singlecalendar', [
-            'user_calendars' => $user_calendars, 
+            'user_calendars' => $user_calendars,
             'calendar_data' => $calendar_data,
             'calendar_start_date' => $calendar_start_date,
-            'calendar_id' => $id]);
+            'calendar_id' => $id,
+            'calendar_name' => $user_calendars->find($id)->Calendar_Name
+        ]);
     }
 
     public function save(Request $request) {
@@ -69,7 +70,7 @@ class ViewCalendarController extends Controller
         $defense = Defense::find($id);
         $defense->EgzamDate = $defense_start;
 
-        if(!$defense->save()) {
+        if (!$defense->save()) {
             return response("Error while saving to database", 500)->header('Content-Type', 'text/plain');
         }
 

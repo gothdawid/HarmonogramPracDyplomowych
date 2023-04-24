@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Single Calendar') }}
+            {{ __('Single Calendar') . ' - ' . $calendar_name }}
         </h2>
     </x-slot>
 
@@ -21,7 +21,7 @@
                 @foreach ($user_calendars as $calendar)
                     <li>
                         <a href="{{ route('view.calendar', $calendar->id) }}"
-                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->is('/viewcalendar/' . $calendar_id) ? 'bg-indigo-600' : '' }}">
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->is('viewcalendar/' . $calendar->id) ? 'bg-indigo-600' : '' }}">
                             <i class='fas fa-calendar-alt'></i>
                             <span
                                 class="flex-1 ml-3 whitespace-nowrap">{{ mb_strimwidth($calendar['Calendar_Name'], 0, 14, '...') }}</span>
@@ -31,23 +31,29 @@
             </ul>
         </div>
     </div>
-    
+
     <div class="float-right w-1/6 min-w-120 max-w-200 mr-2 pr-5 dark:bg-gray-800 mt-12 rounded-lg">
         <div class="h-full px-3 py-4 overflow-y-auto flex flex-col">
             <p class="text-center text-white">{{ __('Actions') }}</p>
 
             <div class="flex items-center mb-1 mt-4">
-                <input id="show_lessons" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                <label for="show_lessons" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Show defense commission lessons') }}</label>
+                <input id="show_lessons" type="checkbox" value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <label for="show_lessons"
+                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Show defense commission lessons') }}</label>
             </div>
 
             <div class="flex items-center">
-                <input id="prevent_overlapping_defenses" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" checked>
-                <label for="prevent_overlapping_defenses" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Prevent overlapping when same person on defense') }}</label>
+                <input id="prevent_overlapping_defenses" type="checkbox" value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    checked>
+                <label for="prevent_overlapping_defenses"
+                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Prevent overlapping when same person on defense') }}</label>
             </div>
             {{-- <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 hover:shadow-blue-700/50 mt-6" data-modal-toggle="saveModal">{{ __('Save') }}</a> --}}
             {{-- <a class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-yellow-400 dark:hover:bg-yellow-500 dark:focus:ring-yellow-800 mt-8" href="#" onClick="window.location.reload();">{{ __('Discard Changes') }}</a> --}}
-            <a class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 mt-8" data-modal-toggle="deleteModal">{{ __('Delete') }}</a>
+            <a class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 mt-8"
+                data-modal-toggle="deleteModal">{{ __('Delete') }}</a>
 
             @include('components.calendar.modal-delete')
             @include('components.calendar.modal-save-edited-calendar')
@@ -73,10 +79,10 @@
                             </span>
                         </div>
                     @endif
-                    
+
 
                     <div id="calendar"></div>
-                    
+
                 </div>
             </div>
         </div>
