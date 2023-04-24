@@ -1,7 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Single Calendar') }}
+            {{ __('Single Calendar') }} - {{ App\Models\Calendar::find($calendar_id)->Calendar_Name }}
+
         </h2>
     </x-slot>
 
