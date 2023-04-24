@@ -98,7 +98,15 @@
                     const { extendedProps } = info.event;
                     const { promoter_id, reviewer_id, leader_id, promoter, reviewer, leader } = extendedProps;
 
+                    var event_date = new Date(info.event.start)
+
+                    var time_range = $("#timerange option:selected").val();
+                    time_range = time_range * 24 * 60 * 60 * 1000;
+
                     for (const [date, times] of Object.entries(extendedProps.hours_with_lessons)) {
+                        if(event_date - new Date(date) > time_range || event_date - new Date(date) < -time_range) {
+                            continue;
+                        }
                         for (const [time, lessons] of Object.entries(times)) {
                             const notAvailable = (
                                 lessons[promoter_id] === 1 ||
