@@ -26,7 +26,7 @@ class ExcelImportController extends Controller {
         if (
             $request->validate([
                 'date' => 'required|date',
-                'file' => 'required|mimes:csv,xlx,xls,xlsx|max:2048'
+                'file' => 'required|mimes:xlx,xls,xlsx|max:2048'
             ])
         ) {
             $file = $request->file('file');
