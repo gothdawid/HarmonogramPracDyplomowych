@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExcelImportController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\ViewCalendarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,11 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/import', [ExcelImportController::class, 'import'])->name('import');
     Route::get('/calendar', [ExcelImportController::class, 'form'])->name('calendar');
+
+    //routes for calendar view
+    Route::get('/viewcalendar/{id}', [ViewCalendarController::class, 'index'])->name('view.calendar');
+    Route::post('/updateevent', [ViewCalendarController::class, 'save'])->name('save.custom.edited.event');
+    Route::get('/viewcalendar/{id}/delete', [ViewCalendarController::class, 'delete'])->name('delete.calendar');
 
     //Route::get('/schedule', [ScheduleController::class, 'index'])->name('');
     Route::get('/deps/load', [ScheduleController::class, 'import_deps'])->name('import.departments');

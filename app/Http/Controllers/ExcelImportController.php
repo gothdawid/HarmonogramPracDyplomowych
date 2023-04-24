@@ -38,15 +38,10 @@ class ExcelImportController extends Controller {
 
             $list_of_commission = [];
 
-            //create from defenses list that will generate array with ignore days
             $ignoreDays = [];
-
             usort($defenses_list[0], function ($a, $b) {
                 return strcmp($b['przewodniczacy'], $a['przewodniczacy']);
             });
-
-            //dd($this->generateDatesFromTime($ignoreDays));
-            // dd($defenses_list);
 
             foreach ($defenses_list as $elem) {
                 foreach ($elem as $item) {
@@ -87,46 +82,17 @@ class ExcelImportController extends Controller {
                         session()->flash('error', 'Promoter ' . $item['promotor'] . ' does not exist in database');
                     }
 
-                    //dd($defense);
                     $calendar->defenses()->save($defense);
                 }
             }
 
             $availibilityArray = $this->generateDatesWithAvailibiltyWindows(array_unique($list_of_commission), $ignoreDays);
 
-            function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string {
-                foreach ($data as $date => $dates) {
-                    foreach ($dates as $window => $values) {
-                        if (
-                            isset($values[$key1]) && $values[$key1] === 0 &&
-                            isset($values[$key2]) && $values[$key2] === 0 &&
-                            isset($values[$key3]) && $values[$key3] === 0
-                        ) {
-                            $data[$date][$window][$key1] = -1;
-                            $data[$date][$window][$key2] = -1;
-                            $data[$date][$window][$key3] = -1;
-                            $dateOfDefense = Carbon::parse($date)->format('Y-m-d') . " " . $window;
-                            return Carbon::parse($dateOfDefense)->format('Y-m-d H:i:s');
-                        }
-                    }
-                }
-
-                return null;
-            }
-            // dd($availibilityArray);
-
             $obrony = $calendar->defenses()->get();
-
-            foreach ($obrony as $obrona) {
-                $obrona['EgzamDate'] = findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID);
-                // $def[] = findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID) . " " . $obrona->student;
-                //dd($obrona['EXAM_DATE']);
+            foreach($obrony as $obrona) {
+                $obrona['EgzamDate'] = $this->findWindowWithKeys($availibilityArray, $obrona->examinerID, $obrona->examiner2ID, $obrona->promoterID);
                 $obrona->save();
             }
-
-
-
-            //dd($availibilityArray);
 
             $user->usage_count -= 1;
             $user->save();
@@ -136,6 +102,5 @@ class ExcelImportController extends Controller {
             session()->flash('error', 'Please upload a valid file');
             return redirect()->back();
         }
-        //$collection = Excel::toArray(new DefenseImport, 'E:\Downloads\defenses.xlsx');
     }
 }
