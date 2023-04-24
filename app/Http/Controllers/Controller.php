@@ -11,6 +11,13 @@ use App\Models\Teacher;
 class Controller extends BaseController {
     use AuthorizesRequests, ValidatesRequests;
 
+
+    //public constructor 
+    public function __construct() {
+        date_default_timezone_set('Europe/Warsaw');
+    }
+
+
     public $hours = [540, 570, 600, 630, 660, 690, 720, 750, 780, 810, 840, 870, 900, 930, 960];
 
     function generateDatesFromTime($ignoreDays = []) {
@@ -113,28 +120,29 @@ class Controller extends BaseController {
         return $availibilityArray;
     }
 
-    function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string
-    {
+    function findWindowWithKeys(array &$data, int $key1, int $key2, int $key3): ?string {
         //for each date
         foreach ($data as $date => $dates) {
             //for each 30 minute window
             foreach ($dates as $window => $values) {
-                if (isset($values[$key1]) && $values[$key1] === 0 &&
-                isset($values[$key2]) && $values[$key2] === 0 &&
-                isset($values[$key3]) && $values[$key3] === 0) {
-                    
+                if (
+                    isset($values[$key1]) && $values[$key1] === 0 &&
+                    isset($values[$key2]) && $values[$key2] === 0 &&
+                    isset($values[$key3]) && $values[$key3] === 0
+                ) {
+
                     //set keys to -1 to avoid double booking defense
                     $data[$date][$window][$key1] = -1;
                     $data[$date][$window][$key2] = -1;
                     $data[$date][$window][$key3] = -1;
 
                     //return date with time of defense
-                    $dateOfDefense = Carbon::parse($date)->format('Y-m-d') . " " . $window ;
+                    $dateOfDefense = Carbon::parse($date)->format('Y-m-d') . " " . $window;
                     return Carbon::parse($dateOfDefense)->format('Y-m-d H:i:s');
                 }
             }
         }
-        
+
         return null;
     }
 }
