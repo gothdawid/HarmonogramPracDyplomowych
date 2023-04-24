@@ -22,18 +22,25 @@ class Controller extends BaseController {
 
     function generateDatesFromTime($ignoreDays = []) {
         $dates = [];
-        $today = Carbon::now()->addDays(1);
+        $year = Carbon::now()->year;
+        $easter_date = Carbon::createFromDate($year, 1, 1)->addDays(easter_days($year));
+        $easter_day = $easter_date->format('d');
+        $easter_month = $easter_date->format('m');
+
         $holidays = [
-            Carbon::createFromDate($today->year, 1, 1)->format('m-d'), // Nowy Rok
-            Carbon::createFromDate($today->year, 1, 6)->format('m-d'), // Trzech Króli
-            Carbon::createFromDate($today->year, 5, 1)->format('m-d'), // Święto Pracy
-            Carbon::createFromDate($today->year, 5, 3)->format('m-d'), // Święto Konstytucji 3 Maja
-            Carbon::createFromDate($today->year, 8, 15)->format('m-d'), // Wniebowzięcie Najświętszej Maryi Panny
-            Carbon::createFromDate($today->year, 11, 1)->format('m-d'), // Wszystkich Świętych
-            Carbon::createFromDate($today->year, 11, 11)->format('m-d'), // Narodowe Święto Niepodległości
-            Carbon::createFromDate($today->year, 12, 25)->format('m-d'), // Boże Narodzenie (pierwszy dzień)
-            Carbon::createFromDate($today->year, 12, 26)->format('m-d'), // Boże Narodzenie (drugi dzień)
-            Carbon::createFromDate($today->year, $today->month, $today->day)->subDays(2)->next(Carbon::THURSDAY)->format('m-d'), // Boże Ciało
+            Carbon::createFromDate($year, 1, 1), // Nowy Rok
+            Carbon::createFromDate($year, 1, 6), // Trzech Króli
+            Carbon::createFromDate($year, $easter_month, $easter_day), // Wielkanoc
+            Carbon::createFromDate($year, $easter_month, $easter_day)->addDays(1), // Poniedziałek Wielkanocny
+            Carbon::createFromDate($year, 5, 1), // Święto Pracy
+            Carbon::createFromDate($year, 5, 3), // Święto Konstytucji 3 Maja
+            Carbon::createFromDate($year, $easter_month, $easter_day)->addDays(49), // Zielone Świątki
+            Carbon::createFromDate($year, $easter_month, $easter_day)->addDays(60), // Boże Ciało
+            Carbon::createFromDate($year, 8, 15), // Wniebowzięcie Najświętszej Maryi Panny
+            Carbon::createFromDate($year, 11, 1), // Wszystkich Świętych
+            Carbon::createFromDate($year, 11, 11), // Narodowe Święto Niepodległości
+            Carbon::createFromDate($year, 12, 25), // Boże Narodzenie (pierwszy dzień)
+            Carbon::createFromDate($year, 12, 26) // Boże Narodzenie (drugi dzień)
         ];
 
         foreach ($ignoreDays as $day) {
