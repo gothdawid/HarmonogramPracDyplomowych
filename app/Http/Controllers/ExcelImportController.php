@@ -99,7 +99,7 @@ class ExcelImportController extends Controller {
             $user->usage_count -= 1;
             $user->save();
 
-            return view('calendar')->with('user_usage', $user->usage_count)->with('collection', $defenses_list);
+            return redirect()->route('view.calendar', ['id' => $calendar->id])->with('user_usage', $user->usage_count);
         } else {
             session()->flash('error', 'Please upload a valid file');
             return redirect()->back();
